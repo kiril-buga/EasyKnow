@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -16,20 +18,37 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btShow;
+    private Button btShow;
+    private FloatingActionButton btAdd;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
-        Toolbar mainToolbar = (Toolbar) findViewById(R.id.MainToolbar);
-        setSupportActionBar(mainToolbar);
 
+        //Toolbar mainToolbar = (Toolbar) findViewById(R.id.MainToolbar);
+        //setSupportActionBar(mainToolbar);
+        //Recycler View and btAdd
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        btAdd = findViewById(R.id.btAdd);
+        btAdd.setOnClickListener((view)->{
+            Intent intent = new Intent(MainActivity.this, AddFolderActivity.class);
+            startActivity(intent);
+            Toast.makeText(this, "The button was clicked " , Toast.LENGTH_LONG).show();
+        });
+
+
+        //Notifications
         createNotificationChannel();
 
         //Assign variable
