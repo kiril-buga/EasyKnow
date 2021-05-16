@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.renderscript.ScriptGroup;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -19,8 +20,10 @@ import java.io.InputStreamReader;
 
 public class AddFolderActivity extends AppCompatActivity {
 
+    private DatabaseHelper myDB;
     private static final String FILE_NAME = "data.txt";
     private EditText editTextFolder;
+    private Button btnSaveFolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,10 +31,14 @@ public class AddFolderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_folder);
 
         editTextFolder = findViewById(R.id.FolderName);
+        btnSaveFolder = findViewById(R.id.btSave);
 
-        findViewById(R.id.btSave).setOnClickListener((view)->{
+        myDB = new DatabaseHelper(this);
+
+        btnSaveFolder.setOnClickListener((view)->{
             // save to a file
             saveFolder();
+
 
             // switch back to main menu
             Intent intent = new Intent(AddFolderActivity.this, MainActivity.class );
@@ -47,28 +54,34 @@ public class AddFolderActivity extends AppCompatActivity {
             editTextFolder.requestFocus();
             return;
         }
+        else {
+            boolean isInserted = myDB.insertData(sFolder);
 
-        FileOutputStream fos = null;
-
-        try {
-            fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
-            fos.write(sFolder.getBytes());
-
-            editTextFolder.getText().clear();
-            Toast.makeText(this, "Saved to " + getFilesDir()+"/"+FILE_NAME,Toast.LENGTH_LONG).show();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (fos != null){
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            if (isInserted) {
+                Toast.makeText(AddFolderActivity.this, "Data inserted", Toast.LENGTH_LONG).show();
             }
         }
+//        FileOutputStream fos = null;
+//
+//        try {
+//            fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+//            fos.write(sFolder.getBytes());
+//
+//            editTextFolder.getText().clear();
+//            Toast.makeText(this, "Saved to " + getFilesDir()+"/"+FILE_NAME,Toast.LENGTH_LONG).show();
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally {
+//            if (fos != null){
+//                try {
+//                    fos.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
 
 
 
