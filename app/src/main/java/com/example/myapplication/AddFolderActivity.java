@@ -126,7 +126,4 @@ public class AddFolderActivity extends AppCompatActivity {
         }
     }
 
-
-
-
 }

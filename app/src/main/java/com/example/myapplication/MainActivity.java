@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v, int position) {
                 Intent intent = new Intent(getApplicationContext(), WordActivity.class);
-                intent.putExtra("folder name", foldersList.get(position).getFolderTitle());
+                //intent.putExtra("folder name", foldersList.get(position).getFolderTitle());
                 startActivity(intent);
             }
         };
