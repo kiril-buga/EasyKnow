@@ -8,11 +8,13 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -30,6 +32,7 @@ import EasyKnowLib.LearnFolder;
 
 public class MainActivity extends AppCompatActivity {
 
+    public DatabaseHelper myDB;
     private ArrayList<LearnFolder> foldersList;
 
     private Button btShow;
@@ -43,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Database
+        myDB = new DatabaseHelper(this);
+
 
         //Folders
         recyclerView = findViewById(R.id.recyclerView);
@@ -118,10 +125,32 @@ public class MainActivity extends AppCompatActivity {
     private void setFolderInfo() {
         //addFolderActivity.loadFolder();
 
-        foldersList.add(new LearnFolder("Just a folder"));
-        foldersList.add(new LearnFolder("Just a folder2"));
-        foldersList.add(new LearnFolder("Just a folder3"));
+        Cursor res = myDB.getAllData();
+        if(res.getCount()==0){
+            // show message
+            showMessage("Error", "Nothing found");
+            return;
+        }
+        StringBuffer buffer = new StringBuffer();
+        while(res.moveToNext()) {
+            buffer.append(res.getString(4) + "\n");
 
+        }
+
+        // show all data
+        String[] folders = buffer.toString().split("\n");
+        for(int i = 0; i<folders.length; i++){
+            foldersList.add(new LearnFolder(folders[i]));
+        }
+
+    }
+
+    public void showMessage(String title, String message){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.show();
     }
 
     private void createNotificationChannel(){
