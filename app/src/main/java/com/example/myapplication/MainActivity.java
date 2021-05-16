@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,23 +23,39 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
+
+import EasyKnowLib.LearnFolder;
+
 
 public class MainActivity extends AppCompatActivity {
+
+    private ArrayList<LearnFolder> foldersList;
 
     private Button btShow;
     private FloatingActionButton btAdd;
     private RecyclerView recyclerView;
+    private FoldersAdapter.RecyclerViewClickListener listener;
+
+    private AddFolderActivity addFolderActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Folders
+        recyclerView = findViewById(R.id.recyclerView);
+
+
+        foldersList = new ArrayList<>();
+
+        setFolderInfo();
+        setAdapter();
+
         //Toolbar mainToolbar = (Toolbar) findViewById(R.id.MainToolbar);
         //setSupportActionBar(mainToolbar);
-        //Recycler View and btAdd
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //btAdd
 
         btAdd = findViewById(R.id.btAdd);
         btAdd.setOnClickListener((view)->{
@@ -75,6 +92,35 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    private void setAdapter() {
+        setOnClickListener();
+        FoldersAdapter adapter = new FoldersAdapter(foldersList, listener);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void setOnClickListener() {
+        listener = new FoldersAdapter.RecyclerViewClickListener() {
+            @Override
+            public void onClick(View v, int position) {
+                Intent intent = new Intent(getApplicationContext(), WordActivity.class);
+                intent.putExtra("folder name", foldersList.get(position).getFolderTitle());
+                startActivity(intent);
+            }
+        };
+    }
+
+    private void setFolderInfo() {
+        //addFolderActivity.loadFolder();
+
+        foldersList.add(new LearnFolder("Just a folder"));
+        foldersList.add(new LearnFolder("Just a folder2"));
+        foldersList.add(new LearnFolder("Just a folder3"));
 
     }
 

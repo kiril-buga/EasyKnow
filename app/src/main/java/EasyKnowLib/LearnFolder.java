@@ -3,24 +3,24 @@ package EasyKnowLib;
 import java.util.ArrayList;
 
 public class LearnFolder {
-    private String title;
+    private String folderTitle;
     private ArrayList<LearnItem> learnItems;
     private LearnFolderStatus learnFolderStatus;
     private NotificationStatus notificationStatus;
 
-    public LearnFolder(String title) {
-        this.title = title;
+    public LearnFolder(String folderTitle) {
+        this.folderTitle = folderTitle;
         this.learnItems = new ArrayList<>();
         this.learnFolderStatus = new LearnFolderStatus();
         this.notificationStatus = new NotificationStatus();
     }
 
-    public String getTitle() {
-        return title;
+    public String getFolderTitle() {
+        return folderTitle;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setFolderTitle(String folderTitle) {
+        this.folderTitle = folderTitle;
     }
 
     public ArrayList<LearnItem> getLearnItems() {
