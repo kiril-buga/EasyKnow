@@ -18,10 +18,10 @@ import EasyKnowLib.LearnItem;
 
 public class WordsAdapter extends RecyclerView.Adapter<WordsAdapter.MyViewHolder> {
     private ArrayList<LearnItem> wordList;
-    private WordsAdapter.RecyclerViewClickListener listener;
+    private RecyclerViewClickListener listener;
 
 
-    public WordsAdapter(ArrayList<LearnItem> wordList, WordsAdapter.RecyclerViewClickListener listener) {
+    public WordsAdapter(ArrayList<LearnItem> wordList, RecyclerViewClickListener listener) {
         this.wordList = wordList;
         this.listener = listener;
     }
