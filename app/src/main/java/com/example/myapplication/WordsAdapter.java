@@ -17,12 +17,12 @@ import EasyKnowLib.LearnFolder;
 import EasyKnowLib.LearnItem;
 
 public class WordsAdapter extends RecyclerView.Adapter<WordsAdapter.MyViewHolder> {
-    private ArrayList<LearnItem> wordList;
+    private ArrayList<LearnItem> wordsList;
     private WordsAdapter.RecyclerViewClickListener listener;
 
 
-    public WordsAdapter(ArrayList<LearnItem> wordList, WordsAdapter.RecyclerViewClickListener listener) {
-        this.wordList = wordList;
+    public WordsAdapter(ArrayList<LearnItem> wordsList, RecyclerViewClickListener listener) {
+        this.wordsList = wordsList;
         this.listener = listener;
     }
 
@@ -47,18 +47,20 @@ public class WordsAdapter extends RecyclerView.Adapter<WordsAdapter.MyViewHolder
     @Override
     public WordsAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycleview_words, parent, false);
-        return new WordsAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull WordsAdapter.MyViewHolder holder, int position) {
-        String word = wordList.get(position).getTitle();
+        String word = wordsList.get(position).getTitle();
+        String meaning = wordsList.get(position).getMeaning();
         holder.wordName.setText(word);
+        holder.wordMeaning.setText(meaning);
     }
 
     @Override
     public int getItemCount() {
-        return wordList.size();
+        return wordsList.size();
     }
 
     public interface RecyclerViewClickListener{
