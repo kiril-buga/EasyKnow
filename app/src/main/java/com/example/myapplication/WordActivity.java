@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import EasyKnowLib.LearnItem;
 
 public class WordActivity extends AppCompatActivity {
-    private ArrayList<LearnItem> wordList;
+    private ArrayList<LearnItem> wordsList;
     private RecyclerView recyclerView;
     private WordsAdapter.RecyclerViewClickListener listener;
 
@@ -22,23 +23,33 @@ public class WordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_words);
         recyclerView = findViewById(R.id.wordsRecyclerView);
-        wordList = new ArrayList<>();
+        wordsList = new ArrayList<>();
 
         setWordInfo();
         setAdapter();
     }
 
     private void setAdapter() {
-        WordsAdapter adapter = new WordsAdapter(wordList, listener);
+        setOnClickListener();
+        WordsAdapter adapter = new WordsAdapter(wordsList, listener);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
     }
 
+    private void setOnClickListener() {
+        listener = new WordsAdapter.RecyclerViewClickListener() {
+            @Override
+            public void onClick(View v, int position) {
+
+            }
+        };
+    }
+
     private void setWordInfo() {
-        wordList.add(new LearnItem("Hallo", "hello"));
-        wordList.add((new LearnItem("Kacke", "shit")));
-        wordList.add((new LearnItem("Alter Mann", "Old man")));
+        wordsList.add(new LearnItem("Hallo", "hello"));
+        wordsList.add((new LearnItem("Kacke", "shit")));
+        wordsList.add((new LearnItem("Alter Mann", "Old man")));
     }
 }
