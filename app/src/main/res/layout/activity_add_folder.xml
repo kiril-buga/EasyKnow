@@ -16,28 +16,43 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.436" />
 
-    <EditText
-        android:id="@+id/WordName"
+    <Button
+        android:id="@+id/btCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:inputType="text"
-        android:hint="Folder name"
+        android:layout_marginTop="24dp"
+        android:text="Cancel"
+        app:backgroundTint="@android:color/holo_green_dark"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.773"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TitleAddNewWord" />
+        app:layout_constraintTop_toBottomOf="@+id/WordName" />
 
     <Button
         android:id="@+id/btSaveWord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:text="Save"
         app:backgroundTint="@android:color/holo_green_dark"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.226"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/WordName" />
+
+    <EditText
+        android:id="@+id/WordName"
+        android:layout_width="265dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="12dp"
+        android:gravity="center_horizontal"
+        android:hint="Folder name"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TitleAddNewWord" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

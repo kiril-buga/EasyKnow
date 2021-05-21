@@ -20,6 +20,7 @@ public class AddFolderActivity extends AppCompatActivity {
     private static final String FILE_NAME = "data.txt";
     private EditText editTextFolder;
     private Button btnSaveFolder;
+    private Button btnSaveFolderCancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,17 +29,17 @@ public class AddFolderActivity extends AppCompatActivity {
 
         editTextFolder = findViewById(R.id.WordName);
         btnSaveFolder = findViewById(R.id.btSaveWord);
+        btnSaveFolderCancel = findViewById(R.id.btCancel);
 
         myDB = new DatabaseHelper(this);
 
         btnSaveFolder.setOnClickListener((view)->{
             // save to a file
             saveFolder();
+        });
 
-
-            // switch back to main menu
-            Intent intent = new Intent(AddFolderActivity.this, MainActivity.class );
-            startActivity(intent);
+        btnSaveFolderCancel.setOnClickListener((view)->{
+            goToMainActivity();
         });
     }
 
@@ -48,7 +49,6 @@ public class AddFolderActivity extends AppCompatActivity {
         if(sFolder.isEmpty()){
             editTextFolder.setError("Folder required");
             editTextFolder.requestFocus();
-            return;
         }
         else {
             boolean isInserted = myDB.insertData(sFolder);
@@ -56,6 +56,7 @@ public class AddFolderActivity extends AppCompatActivity {
             if (isInserted) {
                 Toast.makeText(AddFolderActivity.this, "Data inserted", Toast.LENGTH_LONG).show();
             }
+            goToMainActivity();
         }
 //        FileOutputStream fos = null;
 //
@@ -133,6 +134,11 @@ public class AddFolderActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    private void goToMainActivity(){
+        Intent intent = new Intent(AddFolderActivity.this, MainActivity.class );
+        startActivity(intent);
     }
 
 }

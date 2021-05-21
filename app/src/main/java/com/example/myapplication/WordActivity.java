@@ -1,5 +1,7 @@
 package com.example.myapplication;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -7,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +45,8 @@ public class WordActivity extends AppCompatActivity {
 
         // Controls
         btAdd = findViewById(R.id.btAddWord);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         btAdd.setOnClickListener((view)->{
             Intent intent = new Intent(WordActivity.this, AddWordActivity.class);
             startActivity(intent);
@@ -71,5 +76,16 @@ public class WordActivity extends AppCompatActivity {
         wordsList.add(new LearnItem("Hallo", "hello"));
         wordsList.add((new LearnItem("Kacke", "shit")));
         wordsList.add((new LearnItem("Alter Mann", "Old man")));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = new Intent(WordActivity.this, MainActivity.class );
+                startActivity(intent);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
