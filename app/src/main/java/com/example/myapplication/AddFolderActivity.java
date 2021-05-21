@@ -3,10 +3,7 @@ package com.example.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.renderscript.ScriptGroup;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -14,7 +11,6 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -30,8 +26,8 @@ public class AddFolderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_folder);
 
-        editTextFolder = findViewById(R.id.FolderName);
-        btnSaveFolder = findViewById(R.id.btSave);
+        editTextFolder = findViewById(R.id.WordName);
+        btnSaveFolder = findViewById(R.id.btSaveWord);
 
         myDB = new DatabaseHelper(this);
 

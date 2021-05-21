@@ -21,7 +21,7 @@
         app:layout_constraintVertical_bias="0.906" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btAdd"
+        android:id="@+id/btAddWord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
