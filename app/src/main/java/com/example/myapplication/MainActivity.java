@@ -1,7 +1,6 @@
 package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -11,8 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -64,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         //setSupportActionBar(mainToolbar);
         //btAdd
 
-        btAdd = findViewById(R.id.btAdd);
+        btAdd = findViewById(R.id.btAddWord);
         btAdd.setOnClickListener((view)->{
             Intent intent = new Intent(MainActivity.this, AddFolderActivity.class);
             startActivity(intent);
