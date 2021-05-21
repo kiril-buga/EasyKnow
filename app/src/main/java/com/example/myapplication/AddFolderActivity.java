@@ -55,88 +55,44 @@ public class AddFolderActivity extends AppCompatActivity {
             return;
         }
         else {
-            boolean isInserted = myDB.insertData(sFolder);
+            boolean isInserted = myDB.insertNewFolder(sFolder);
 
             if (isInserted) {
                 Toast.makeText(AddFolderActivity.this, "Data inserted", Toast.LENGTH_LONG).show();
             }
         }
-//        FileOutputStream fos = null;
+
+    }
+
+//    public void loadFolder(){
+//        FileInputStream fis = null;
 //
 //        try {
-//            fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
-//            fos.write(sFolder.getBytes());
+//            fis = openFileInput(FILE_NAME);
+//            InputStreamReader isr = new InputStreamReader(fis);
+//            BufferedReader br = new BufferedReader(isr);
+//            StringBuilder sb = new StringBuilder();
+//            String text;
 //
-//            editTextFolder.getText().clear();
-//            Toast.makeText(this, "Saved to " + getFilesDir()+"/"+FILE_NAME,Toast.LENGTH_LONG).show();
+//            while((text = br.readLine()) != null){
+//                sb.append(text).append("\n");
+//            }
+//            // load to
+//
+//            editTextFolder.setText(sb.toString());
 //        } catch (FileNotFoundException e) {
 //            e.printStackTrace();
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        } finally {
-//            if (fos != null){
+//            if(fis != null) {
 //                try {
-//                    fos.close();
+//                    fis.close();
 //                } catch (IOException e) {
 //                    e.printStackTrace();
 //                }
 //            }
 //        }
-
-
-
-
-
-        // ADAPT SO THAT IT SAVES ON THE PHONE
-
-
-//        class SaveFolder extends AsyncTask<Void, Void, Void> {
-//
-//            @Override
-//            protected Void doInBackground(Void... voids) {
-//                LearnFolder task = new LearnFolder();
-//                return null;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(Void aVoid) {
-//                super.onPostExecute(aVoid);
-//                finish();
-//                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-//                Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_LONG).show();
-//            }
-//        }
-    }
-
-    public void loadFolder(){
-        FileInputStream fis = null;
-
-        try {
-            fis = openFileInput(FILE_NAME);
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader br = new BufferedReader(isr);
-            StringBuilder sb = new StringBuilder();
-            String text;
-
-            while((text = br.readLine()) != null){
-                sb.append(text).append("\n");
-            }
-            // load to
-
-            editTextFolder.setText(sb.toString());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if(fis != null) {
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
+//    }
 
 }

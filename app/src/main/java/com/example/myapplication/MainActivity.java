@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
     private void setFolderInfo() {
         //addFolderActivity.loadFolder();
 
-        Cursor res = myDB.getAllData();
+        Cursor res = myDB.getAllFolders();
         if(res.getCount()==0){
             // show message
             showMessage("Error", "Nothing found");
@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         }
         StringBuffer buffer = new StringBuffer();
         while(res.moveToNext()) {
-            buffer.append(res.getString(4) + "\n");
+            buffer.append(res.getString(1) + "\n");
 
         }
 
