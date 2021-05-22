@@ -13,7 +13,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_WORDS = "words_table";
     public static final String TABLE_FOLDERS = "folders_table";
 
-    // WORDS_TABLE
+    //WORDS_TABLE
     public static final String WORD_COL_1 = "ID";
     public static final String WORD_COL_2 = "WORD";
     public static final String WORD_COL_3 = "MEANING";
@@ -32,7 +32,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table " + TABLE_FOLDERS + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, FOLDER TEXT)");
         db.execSQL("create table " + TABLE_WORDS + "(ID INTEGER PRIMARY KEY AUTOINCREMENT,WORD TEXT, MEANING TEXT, LEARN_STATUS INTEGER," +
-                " FOLDER_ID INTEGER, LASTNOTIFICATIONTIME TEXT)");
+                " FOLDER_ID INTEGER, LAST_NOTIFICATION_TIME TEXT)");
     }
 
     @Override
@@ -77,6 +77,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor getAllFolders() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select * from "+TABLE_FOLDERS,null);
+        return res;
+    }
+
+    public Cursor getFolderId(String name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select "+FOLDER_COL_1+" from "+TABLE_FOLDERS +" where "+FOLDER_COL_2 + " = ?",new String[]{name});
         return res;
     }
 }

@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "The button was clicked " , Toast.LENGTH_LONG).show();
         });
 
-
         //Notifications
         createNotificationChannel();
 
@@ -90,10 +89,7 @@ public class MainActivity extends AppCompatActivity {
         btShow.setOnClickListener(new View.OnClickListener() {
             //@Override
             public void onClick(View v) {
-
                 notificationManager.notify(100, builder.build());
-
-
             }
         });
 
@@ -113,7 +109,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v, int position) {
                 Intent intent = new Intent(getApplicationContext(), WordActivity.class);
-                //intent.putExtra("folder name", foldersList.get(position).getFolderTitle());
+                intent.putExtra("folderTitle", foldersList.get(position).getFolderTitle());
+
+                //Toast.makeText(MainActivity.this, folderTitle,Toast.LENGTH_LONG).show();
                 startActivity(intent);
             }
         };

@@ -3,16 +3,22 @@ package com.example.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.util.Calendar;
+
+import EasyKnowLib.LearnFolder;
 
 public class AddWordActivity extends AppCompatActivity {
 
     private DatabaseHelper myDB;
     //private static final String FILE_NAME = "data.txt";
     private EditText editTextWord;
+    private EditText editTextMeaning;
     private Button btnSaveWord;
     private Button btnSaveWordCancel;
 
@@ -22,6 +28,7 @@ public class AddWordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_word);
 
         editTextWord = findViewById(R.id.WordName);
+        editTextMeaning = findViewById(R.id.WordMeaning);
         btnSaveWord = findViewById(R.id.btSaveWord);
         btnSaveWordCancel = findViewById(R.id.btSaveWordCancel);
 
@@ -39,6 +46,10 @@ public class AddWordActivity extends AppCompatActivity {
 
     public void saveWord(){
         final String sWord = editTextWord.getText().toString().trim();
+        final String sMeaning = editTextMeaning.getText().toString().trim();
+        final int learn_status = 0;
+        final String sFolder_id;
+        final String folderTitle;
 
         if(sWord.isEmpty()){
             editTextWord.setError("Word required");
@@ -46,11 +57,30 @@ public class AddWordActivity extends AppCompatActivity {
             return;
         }
         else {
-            boolean isInserted = myDB.insertData(sWord);
 
-            if (isInserted) {
-                Toast.makeText(AddWordActivity.this, "Data inserted", Toast.LENGTH_LONG).show();
+            // GetData from recycler view
+
+            if (getIntent().hasExtra("folderTitle")) {
+                folderTitle = getIntent().getStringExtra("folderTitle");
+                Cursor res = myDB.getFolderId(folderTitle);
+                if(res.getCount()==0) return;
+                StringBuffer buffer = new StringBuffer();
+                while(res.moveToNext()){
+                    buffer.append(res.getString(0)+"\n");
+                }
+                //Show data
+                sFolder_id = buffer.toString();
+                Toast.makeText(AddWordActivity.this, "FolderID: " + sFolder_id, Toast.LENGTH_LONG).show();
+
+                boolean isInserted = myDB.insertNewWord(sWord, sMeaning, learn_status, sFolder_id, "21.05.2021");
+
+                if (isInserted) {
+                    Toast.makeText(AddWordActivity.this, "Data inserted", Toast.LENGTH_LONG).show();
+                    goToWordActivity();
+                }
             }
+
+
         }
     }
 
