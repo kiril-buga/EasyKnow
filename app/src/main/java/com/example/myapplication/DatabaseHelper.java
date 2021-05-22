@@ -79,4 +79,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor res = db.rawQuery("select * from "+TABLE_FOLDERS,null);
         return res;
     }
+
+/*    public Cursor getWord(int folderId, int learnStatus, String time) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select * from "+TABLE_WORDS + "where FOLDER_ID = " + folderId + "and LEARN_STATUS = " + learnStatus +
+                "and LAST_NOTIFICATION_TIME <" + time ,null);
+        return res;
+    }*/
 }

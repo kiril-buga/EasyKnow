@@ -46,11 +46,11 @@ public class AddWordActivity extends AppCompatActivity {
             return;
         }
         else {
-            boolean isInserted = myDB.insertData(sWord);
+           /* boolean isInserted = myDB.insertNewWord(sWord);
 
             if (isInserted) {
                 Toast.makeText(AddWordActivity.this, "Data inserted", Toast.LENGTH_LONG).show();
-            }
+            }*/
         }
     }
 
