@@ -1,6 +1,8 @@
 package com.example.myapplication;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -16,6 +18,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -51,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
         //Folders
         recyclerView = findViewById(R.id.recyclerView);
 
-
         foldersList = new ArrayList<>();
 
         setFolderInfo();
@@ -73,6 +77,10 @@ public class MainActivity extends AppCompatActivity {
 
         //Assign variable
         btShow = findViewById(R.id.bt_show);
+
+        // Toolbar
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.mainActivityToolbar);
+        setSupportActionBar(myToolbar);
 
         //Convert image type to bitmap
         Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.picture);
@@ -162,7 +170,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
 
-
-
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_edit:
+                return true;
+            case R.id.item_notifications:
+                Intent intent = new Intent(MainActivity.this, NotificationManagerActivity.class );
+                startActivity(intent);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

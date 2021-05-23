@@ -3,6 +3,7 @@ package com.example.myapplication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,10 +46,15 @@ public class WordActivity extends AppCompatActivity {
         setWordInfo();
         setAdapter();
 
-        // Controls
-        btAdd = findViewById(R.id.btAddWord);
+        // Toolbar
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.wordActivityToolbar);
+        myToolbar.setTitle("My Words");
+        setSupportActionBar(myToolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        // Controls
+        btAdd = findViewById(R.id.btAddWord);
         btAdd.setOnClickListener((view)->{
             Intent intent = new Intent(WordActivity.this, AddWordActivity.class);
             if (getIntent().hasExtra("folderTitle")) {

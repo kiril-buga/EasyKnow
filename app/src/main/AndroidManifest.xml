@@ -8,8 +8,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyApplication">
-        <activity android:name=".AddWordActivity"></activity>
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".NotificationManagerActivity"></activity>
+        <activity android:name=".AddWordActivity" />
         <activity android:name=".WordActivity" />
         <activity android:name=".AddFolderActivity" /> <!-- added for actionBar -->
         <activity android:name=".NotificationActivity" />
