@@ -31,34 +31,40 @@ public class WordActivity extends AppCompatActivity {
     private WordsAdapter.RecyclerViewClickListener listener;
     private FloatingActionButton btAdd;
 
+    private String folderTitle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_words);
 
-        // DB
+        //DB
         myDB = new DatabaseHelper(this);
 
-        // Words
+        //Words
         wordsList = new ArrayList<>();
         recyclerView = findViewById(R.id.wordsRecyclerView);
 
-        setWordInfo();
-        setAdapter();
-
-        // Toolbar
+        //Toolbar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.wordActivityToolbar);
         myToolbar.setTitle("My Words");
         setSupportActionBar(myToolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        // Controls
+        //Get all extras from MainActivity
+        if (getIntent().hasExtra("folderTitle")) {
+            folderTitle = getIntent().getStringExtra("folderTitle");
+        }
+
+        setWordInfo();
+        setAdapter();
+
+        //Controls
         btAdd = findViewById(R.id.btAddWord);
         btAdd.setOnClickListener((view)->{
             Intent intent = new Intent(WordActivity.this, AddWordActivity.class);
-            if (getIntent().hasExtra("folderTitle")) {
-                String folderTitle = getIntent().getStringExtra("folderTitle");
+            if (!folderTitle.isEmpty()) {
                 intent.putExtra("folderTitle", folderTitle);
                 Toast.makeText(WordActivity.this, "FolderTitle:"+folderTitle, Toast.LENGTH_LONG).show();
             }
@@ -86,15 +92,23 @@ public class WordActivity extends AppCompatActivity {
     }
 
     private void setWordInfo() {
-        Cursor res = myDB.getAllWords();
+        //Get folder ID
+        Cursor res = myDB.getFolderId(folderTitle);
+        res.moveToFirst();
+        String folderId = res.getString(0);
+        //Get all words
+        res = myDB.getAllWords();
+
         if(res.getCount()==0){
             return;
         }
         StringBuffer bufferWords = new StringBuffer();
         StringBuffer bufferMeanings = new StringBuffer();
         while(res.moveToNext()) {
-            bufferWords.append(res.getString(1) + "\n");
-            bufferMeanings.append(res.getString(2)+"\n");
+            if(res.getString(4).equals(folderId)) {
+                bufferWords.append(res.getString(1) + "\n");
+                bufferMeanings.append(res.getString(2) + "\n");
+            }
         }
 
         // show all data
