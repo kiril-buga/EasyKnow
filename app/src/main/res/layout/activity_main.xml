@@ -44,12 +44,12 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/mainActivityToolbar"
-        android:layout_width="409dp"
-        android:layout_height="54dp"
+        android:layout_width="415dp"
+        android:layout_height="53dp"
         android:background="@color/purple_500"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="1dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
