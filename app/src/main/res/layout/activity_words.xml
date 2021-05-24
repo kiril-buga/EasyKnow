@@ -9,8 +9,8 @@
         android:id="@+id/wordsRecyclerView"
         android:layout_width="411dp"
         android:layout_height="673dp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="58dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/wordActivityToolbar" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btAddWord"
@@ -28,12 +28,13 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/wordActivityToolbar"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
+        android:layout_width="411dp"
+        android:layout_height="56dp"
         android:background="@color/purple_500"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
