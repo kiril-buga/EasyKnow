@@ -12,6 +12,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "words.db";
     public static final String TABLE_WORDS = "words_table";
     public static final String TABLE_FOLDERS = "folders_table";
+    public static final String TABLE_NOTIFICATION_STATUS = "notification_status_table";
 
     //WORDS_TABLE
     public static final String WORD_COL_1 = "ID";
@@ -23,6 +24,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //FOLDERS_TABLE
     public static final String FOLDER_COL_1 = "ID";
     public static final String FOLDER_COL_2 = "FOLDER";
+    //NOTIFICATION_STATUS_TABLE
+    public static final String NOTIFICATION_STATUS_COL1 = "NOTIFICATION_NUMBER";
+    public static final String NOTIFICATION_STATUS_COL2 = "NUMBER_OF_NOTIFICATIONS_SENT";
+    public static final String NOTIFICATION_STATUS_COL3 = "MONDAY";
+    public static final String NOTIFICATION_STATUS_COL4 = "TUESDAY";
+    public static final String NOTIFICATION_STATUS_COL5 = "WEDNESDAY";
+    public static final String NOTIFICATION_STATUS_COL6 = "THURSDAY";
+    public static final String NOTIFICATION_STATUS_COL7 = "FRIDAY";
+    public static final String NOTIFICATION_STATUS_COL8 = "SATURDAY";
+    public static final String NOTIFICATION_STATUS_COL9 = "SUNDAY";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -33,12 +44,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("create table " + TABLE_FOLDERS + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, FOLDER TEXT)");
         db.execSQL("create table " + TABLE_WORDS + "(ID INTEGER PRIMARY KEY AUTOINCREMENT,WORD TEXT, MEANING TEXT, LEARN_STATUS INTEGER," +
                 " FOLDER_ID INTEGER, LAST_NOTIFICATION_TIME TEXT)");
+        // Boolean values are stored as integers 0 (false) and 1 (true)
+        db.execSQL("create table " + TABLE_NOTIFICATION_STATUS + "(NOTIFICATION_NUMBER INTEGER, NUMBER_OF_NOTIFICATIONS_SENT INTEGER, MONDAY INTEGER DEFAULT 0 NOT NULL CHECK (TUESDAY IN (0, 1)), " +
+                "TUESDAY INTEGER DEFAULT 0 NOT NULL CHECK (TUESDAY IN (0, 1)), WEDNESDAY INTEGER DEFAULT 0 NOT NULL CHECK (WEDNESDAY IN (0, 1)), THURSDAY INTEGER DEFAULT 0 NOT NULL CHECK (THURSDAY IN (0, 1)), " +
+                "FRIDAY INTEGER DEFAULT 0 NOT NULL CHECK (FRIDAY IN (0, 1)), SATURDAY INTEGER DEFAULT 0 NOT NULL CHECK (SATURDAY IN (0, 1)), SUNDAY INTEGER DEFAULT 0 NOT NULL CHECK (SUNDAY IN (0, 1)))");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FOLDERS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_WORDS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTIFICATION_STATUS);
         onCreate(db);
     }
 
