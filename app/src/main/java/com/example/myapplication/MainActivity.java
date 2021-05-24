@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Toolbar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.mainActivityToolbar);
+        myToolbar.setTitle("My Topics");
         setSupportActionBar(myToolbar);
 
         //Convert image type to bitmap
