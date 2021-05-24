@@ -1,10 +1,5 @@
 package com.example.myapplication;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -15,6 +10,13 @@ import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Switch;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import EasyKnowLib.Day;
+import EasyKnowLib.NotificationStatus;
 import EasyKnowLib.Week;
 
 public class NotificationManagerActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -29,7 +31,7 @@ public class NotificationManagerActivity extends AppCompatActivity implements Ad
     private Switch swSunday;
 
     private int currentNotificationNumber;
-    private Week week = new Week();
+    private NotificationStatus notificationStatus = new NotificationStatus();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,15 +60,38 @@ public class NotificationManagerActivity extends AppCompatActivity implements Ad
         swMonday = findViewById(R.id.switchMonday);
         swMonday.setOnCheckedChangeListener(this::setDay);
         swTuesday = findViewById(R.id.switchTuesday);
+        swTuesday.setOnCheckedChangeListener(this::setDay);
         swWednesday = findViewById(R.id.switchWednesday);
+        swWednesday.setOnCheckedChangeListener(this::setDay);
         swThursday = findViewById(R.id.switchThursday);
+        swThursday.setOnCheckedChangeListener(this::setDay);
         swFriday = findViewById(R.id.switchFriday);
+        swFriday.setOnCheckedChangeListener(this::setDay);
         swSaturday = findViewById(R.id.switchSaturday);
+        swSaturday.setOnCheckedChangeListener(this::setDay);
         swSunday = findViewById(R.id.switchSunday);
+        swSunday.setOnCheckedChangeListener(this::setDay);
     }
 
     private void setDay(CompoundButton compoundButton, boolean b) {
-
+        int currentSwitch = compoundButton.getId();
+        Week week = this.notificationStatus.getWeek();
+        // sets day in the week object
+        if (currentSwitch == swMonday.getId()) {
+            week.setDay(Day.MONDAY, b);
+        } else if (currentSwitch == swTuesday.getId()) {
+            week.setDay(Day.TUESDAY, b);
+        } else if (currentSwitch == swWednesday.getId()) {
+            week.setDay(Day.WEDNESDAY, b);
+        } else if (currentSwitch == swThursday.getId()) {
+            week.setDay(Day.THURSDAY, b);
+        } else if (currentSwitch == swFriday.getId()) {
+            week.setDay(Day.FRIDAY, b);
+        } else if (currentSwitch == swSaturday.getId()) {
+            week.setDay(Day.SATURDAY, b);
+        } else if (currentSwitch == swSunday.getId()) {
+            week.setDay(Day.SUNDAY, b);
+        }
     }
 
 
