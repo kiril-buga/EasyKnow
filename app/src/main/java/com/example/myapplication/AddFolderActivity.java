@@ -55,8 +55,12 @@ public class AddFolderActivity extends AppCompatActivity {
 
             if (isInserted) {
                 Toast.makeText(AddFolderActivity.this, "Data inserted", Toast.LENGTH_LONG).show();
+                goToMainActivity();
+            } else{
+                editTextFolder.setError("Folder already exists");
+                editTextFolder.requestFocus();
             }
-            goToMainActivity();
+
         }
 
     }
