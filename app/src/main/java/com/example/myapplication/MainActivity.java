@@ -10,13 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,6 +30,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
 import EasyKnowLib.LearnFolder;
+import Notifications.NotificationManagerActivity;
+import Notifications.NotificationReceiver;
+
+import static com.example.myapplication.EasyKnow.CHANNEL_1_ID;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -37,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     public DatabaseHelper myDB;
     private ArrayList<LearnFolder> foldersList;
 
+    private NotificationManagerCompat notificationManager;
     private Button btShow;
     private FloatingActionButton btAdd;
     private RecyclerView recyclerView;
@@ -72,9 +77,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "The button was clicked " , Toast.LENGTH_LONG).show();
         });
 
-        //Notifications
-        createNotificationChannel();
-
         //Assign variable
         btShow = findViewById(R.id.bt_show);
 
@@ -85,20 +87,41 @@ public class MainActivity extends AppCompatActivity {
 
         //Convert image type to bitmap
         Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.picture);
+        //Notifications
+        notificationManager = NotificationManagerCompat.from(this);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "channel1")
-                .setSmallIcon(R.drawable.ic_message)
-                .setContentTitle("Notification")
-                .setContentText("This is notification")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setLargeIcon(icon);
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
 
         btShow.setOnClickListener(new View.OnClickListener() {
             //@Override
             public void onClick(View v) {
-                notificationManager.notify(100, builder.build());
+
+                Intent activityIntent = new Intent(getApplicationContext(), MainActivity.class);
+                PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(),
+                        0, activityIntent, 0);
+
+                Intent broadcastIntent = new Intent(getApplicationContext(), NotificationReceiver.class);
+                broadcastIntent.putExtra("toastMesage", "This is a message");
+                PendingIntent actionIntent = PendingIntent.getBroadcast(getApplicationContext(),
+                        0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_1_ID)
+                        .setSmallIcon(R.drawable.ic_message)
+                        .setContentTitle("Notification")
+                        .setContentText("This is a notification")
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                        .setColor(Color.BLUE)
+                        .setLargeIcon(icon)
+                        .setContentIntent(contentIntent)
+                        .setAutoCancel(true)
+                        .setOnlyAlertOnce(true)
+                        .addAction(R.mipmap.ic_launcher, "Toast", actionIntent)
+                        .build();
+
+
+                notificationManager.notify(1, notification);
             }
         });
 
@@ -132,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         Cursor res = myDB.getAllFolders();
         if(res.getCount()==0){
             // show message
-            showMessage("Error", "Nothing found");
+            showMessage("Welcome!", "Please, add new topics and words");
             return;
         }
         StringBuffer buffer = new StringBuffer();
@@ -155,20 +178,6 @@ public class MainActivity extends AppCompatActivity {
         builder.setTitle(title);
         builder.setMessage(message);
         builder.show();
-    }
-
-    private void createNotificationChannel(){
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            CharSequence name = "Channel";
-            String description = "Channel for notifications";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel("channel1", name, importance);
-            channel.setDescription(description);
-
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
     }
 
     @Override

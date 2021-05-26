@@ -41,6 +41,11 @@ public class WordActivity extends AppCompatActivity {
         //DB
         myDB = new DatabaseHelper(this);
 
+        //Get all extras from MainActivity
+        if (getIntent().hasExtra("folderTitle")) {
+            folderTitle = getIntent().getStringExtra("folderTitle");
+        }
+
         //Words
         wordsList = new ArrayList<>();
         recyclerView = findViewById(R.id.wordsRecyclerView);
@@ -51,11 +56,6 @@ public class WordActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-
-        //Get all extras from MainActivity
-        if (getIntent().hasExtra("folderTitle")) {
-            folderTitle = getIntent().getStringExtra("folderTitle");
-        }
 
         setWordInfo();
         setAdapter();

@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package Notifications;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +17,9 @@ import androidx.appcompat.widget.Toolbar;
 
 import EasyKnowLib.Day;
 import EasyKnowLib.NotificationStatus;
+import com.example.myapplication.MainActivity;
+import com.example.myapplication.R;
+
 import EasyKnowLib.Week;
 
 public class NotificationManagerActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
