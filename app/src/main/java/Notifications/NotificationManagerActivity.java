@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package Notifications;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -14,6 +14,9 @@ import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Switch;
+
+import com.example.myapplication.MainActivity;
+import com.example.myapplication.R;
 
 import EasyKnowLib.Week;
 
