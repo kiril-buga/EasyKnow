@@ -23,6 +23,8 @@ public class AddWordActivity extends AppCompatActivity {
     private Button btnSaveWord;
     private Button btnSaveWordCancel;
 
+    private String folderTitle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,27 +52,24 @@ public class AddWordActivity extends AppCompatActivity {
         final String sMeaning = editTextMeaning.getText().toString().trim();
         final int learn_status = 0;
         final String sFolder_id;
-        final String folderTitle;
 
-        if(sWord.isEmpty()){
-            editTextWord.setError("Word required");
+
+        if(sWord.isEmpty() || sMeaning.isEmpty()){
+            editTextWord.setError("Word/Meaning is required");
             editTextWord.requestFocus();
             return;
         }
         else {
 
             // GetData from recycler view
-
             if (getIntent().hasExtra("folderTitle")) {
                 folderTitle = getIntent().getStringExtra("folderTitle");
                 Cursor res = myDB.getFolderId(folderTitle);
+                res.moveToFirst();
+                sFolder_id = res.getString(0);
                 if(res.getCount()==0) return;
-                StringBuffer buffer = new StringBuffer();
-                while(res.moveToNext()){
-                    buffer.append(res.getString(0)+"\n");
-                }
+
                 //Show data
-                sFolder_id = buffer.toString();
                 Toast.makeText(AddWordActivity.this, "FolderID: " + sFolder_id, Toast.LENGTH_LONG).show();
 
                 boolean isInserted = myDB.insertNewWord(sWord, sMeaning, learn_status, sFolder_id, "21.05.2021");
@@ -88,6 +87,7 @@ public class AddWordActivity extends AppCompatActivity {
     // switches back to the WordsView
     private void goToWordActivity() {
         Intent intent = new Intent(AddWordActivity.this, WordActivity.class );
+        intent.putExtra("folderTitle", folderTitle);
         startActivity(intent);
     }
 
