@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class NotificationStatus {
     private Week week;
+    private int notificationNumber = 0;
     private LocalTime notificationTime;
     private LocalDateTime lastNotificationTime;
     private int numberOfTimesUserNotified;
@@ -45,5 +46,13 @@ public class NotificationStatus {
 
     public void setNumberOfTimesUserNotified(int numberOfTimesUserNotified) {
         this.numberOfTimesUserNotified = numberOfTimesUserNotified;
+    }
+
+    public int getNotificationNumber() {
+        return notificationNumber;
+    }
+
+    public void setNotificationNumber(int notificationNumber) {
+        this.notificationNumber = notificationNumber;
     }
 }

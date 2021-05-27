@@ -45,7 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("create table " + TABLE_WORDS + "(ID INTEGER PRIMARY KEY AUTOINCREMENT,WORD TEXT, MEANING TEXT, LEARN_STATUS INTEGER," +
                 " FOLDER_ID INTEGER, LAST_NOTIFICATION_TIME TEXT)");
         // Boolean values are stored as integers 0 (false) and 1 (true)
-        db.execSQL("create table " + TABLE_NOTIFICATION_STATUS + "(NOTIFICATION_NUMBER INTEGER, NUMBER_OF_NOTIFICATIONS_SENT INTEGER, MONDAY INTEGER DEFAULT 0 NOT NULL CHECK (TUESDAY IN (0, 1)), " +
+        db.execSQL("create table " + TABLE_NOTIFICATION_STATUS + "(NOTIFICATION_NUMBER INTEGER DEFAULT 0, NUMBER_OF_NOTIFICATIONS_SENT INTEGER, MONDAY INTEGER DEFAULT 0 NOT NULL CHECK (TUESDAY IN (0, 1)), " +
                 "TUESDAY INTEGER DEFAULT 0 NOT NULL CHECK (TUESDAY IN (0, 1)), WEDNESDAY INTEGER DEFAULT 0 NOT NULL CHECK (WEDNESDAY IN (0, 1)), THURSDAY INTEGER DEFAULT 0 NOT NULL CHECK (THURSDAY IN (0, 1)), " +
                 "FRIDAY INTEGER DEFAULT 0 NOT NULL CHECK (FRIDAY IN (0, 1)), SATURDAY INTEGER DEFAULT 0 NOT NULL CHECK (SATURDAY IN (0, 1)), SUNDAY INTEGER DEFAULT 0 NOT NULL CHECK (SUNDAY IN (0, 1)))");
     }
@@ -63,6 +63,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(FOLDER_COL_2, folder);
         long result = db.insert(TABLE_FOLDERS, null, contentValues);
+        if(result == -1)
+            return false;
+        else
+            return true;
+    }
+
+    public boolean insertNewNotificationStatus(int notificationNumber){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(NOTIFICATION_STATUS_COL2, notificationNumber);
+        long result = db.insert(TABLE_NOTIFICATION_STATUS, null, contentValues);
         if(result == -1)
             return false;
         else

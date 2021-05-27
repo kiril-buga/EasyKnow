@@ -1,6 +1,8 @@
 package Notifications;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +19,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import EasyKnowLib.Day;
 import EasyKnowLib.NotificationStatus;
+
+import com.example.myapplication.DatabaseHelper;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 
@@ -35,6 +39,7 @@ public class NotificationManagerActivity extends AppCompatActivity implements Ad
 
     private int currentNotificationNumber;
     private NotificationStatus notificationStatus = new NotificationStatus();
+    DatabaseHelper myDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +79,12 @@ public class NotificationManagerActivity extends AppCompatActivity implements Ad
         swSaturday.setOnCheckedChangeListener(this::setDay);
         swSunday = findViewById(R.id.switchSunday);
         swSunday.setOnCheckedChangeListener(this::setDay);
+
+        // Initialize DB Helper
+        myDB = new DatabaseHelper(this);
+
+        // Check for DB content
+        setNotificationInfo();
     }
 
     private void setDay(CompoundButton compoundButton, boolean b) {
@@ -95,6 +106,24 @@ public class NotificationManagerActivity extends AppCompatActivity implements Ad
         } else if (currentSwitch == swSunday.getId()) {
             week.setDay(Day.SUNDAY, b);
         }
+    }
+
+    private void setNotificationInfo() {
+        Cursor res = myDB.getAllFolders();
+        if(res.getCount()==0){
+            // show message
+            showMessage("Set your Notifications Perferences!", "Here, you can tell the app at which days in the week and how many times you want to be notified. At the moment, all notifications are disabled.");
+            myDB.insertNewNotificationStatus(notificationStatus.getNotificationNumber());
+            return;
+        }
+    }
+
+    public void showMessage(String title, String message){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.show();
     }
 
 
