@@ -6,17 +6,22 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class NotificationStatus {
-    private ArrayList<DayOfWeek> notificationDays;
+    private Week week;
+    private int notificationNumber = 0;
     private LocalTime notificationTime;
     private LocalDateTime lastNotificationTime;
     private int numberOfTimesUserNotified;
 
-    public ArrayList<DayOfWeek> getNotificationDays() {
-        return notificationDays;
+    public NotificationStatus() {
+        this.week = new Week();
     }
 
-    public void setNotificationDays(ArrayList<DayOfWeek> notificationDays) {
-        this.notificationDays = notificationDays;
+    public void setWeek(Week week) {
+        this.week = week;
+    }
+
+    public Week getWeek() {
+        return week;
     }
 
     public LocalTime getNotificationTime() {
@@ -41,5 +46,13 @@ public class NotificationStatus {
 
     public void setNumberOfTimesUserNotified(int numberOfTimesUserNotified) {
         this.numberOfTimesUserNotified = numberOfTimesUserNotified;
+    }
+
+    public int getNotificationNumber() {
+        return notificationNumber;
+    }
+
+    public void setNotificationNumber(int notificationNumber) {
+        this.notificationNumber = notificationNumber;
     }
 }
