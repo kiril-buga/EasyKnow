@@ -13,19 +13,17 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-import EasyKnowLib.LearnFolder;
-import EasyKnowLib.LearnItem;
+import EasyKnowLib.Word;
 
 public class WordActivity extends AppCompatActivity {
     public DatabaseHelper myDB;
-    private ArrayList<LearnItem> wordsList;
+    private ArrayList<Word> wordsList;
 
     private RecyclerView recyclerView;
     private WordsAdapter.RecyclerViewClickListener listener;
@@ -115,7 +113,7 @@ public class WordActivity extends AppCompatActivity {
         String[] words = bufferWords.toString().split("\n");
         String[] meanings = bufferMeanings.toString().split("\n");
         for(int i = 0; i<words.length; i++){
-            wordsList.add(new LearnItem(words[i],meanings[i]));
+            wordsList.add(new Word(words[i],meanings[i]));
         }
     }
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class LearnFolder {
     private String folderTitle;
-    private ArrayList<LearnItem> learnItems;
+    private ArrayList<Word> learnItems;
     private LearnFolderStatus learnFolderStatus;
     private NotificationStatus notificationStatus;
 
@@ -23,11 +23,11 @@ public class LearnFolder {
         this.folderTitle = folderTitle;
     }
 
-    public ArrayList<LearnItem> getLearnItems() {
+    public ArrayList<Word> getLearnItems() {
         return learnItems;
     }
 
-    public void setLearnItems(ArrayList<LearnItem> learnItems) {
+    public void setLearnItems(ArrayList<Word> learnItems) {
         this.learnItems = learnItems;
     }
 

@@ -1,11 +1,11 @@
 package EasyKnowLib;
 
-public class LearnItem {
+public class Word {
     private String title;
     private String meaning;
     private LearnItemStatus learnStatus;
 
-    public LearnItem(String title, String meaning) {
+    public Word(String title, String meaning) {
         this.title = title;
         this.meaning = meaning;
         this.learnStatus = new LearnItemStatus();
