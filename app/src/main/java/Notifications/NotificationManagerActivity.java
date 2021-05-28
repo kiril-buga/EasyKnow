@@ -8,9 +8,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -18,8 +20,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import EasyKnowLib.Day;
+import EasyKnowLib.NotificationSettings;
 import EasyKnowLib.NotificationStatus;
 
+import com.example.myapplication.AddWordActivity;
 import com.example.myapplication.DatabaseHelper;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
@@ -36,18 +40,20 @@ public class NotificationManagerActivity extends AppCompatActivity implements Ad
     private Switch swFriday;
     private Switch swSaturday;
     private Switch swSunday;
+    private Button btnSaveNotificationSettings;
 
-    private int currentNotificationNumber;
-    private NotificationStatus notificationStatus = new NotificationStatus();
-    DatabaseHelper myDB;
+    private NotificationSettings notificationSettings = new NotificationSettings();
+    private DatabaseHelper myDB;
+    private boolean userSettingsExistence = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification_manager);
 
+        //Controls
         // Spinner
-        Spinner spinner = (Spinner) findViewById(R.id.spinnerNotificationAmount);
+        spinner = (Spinner) findViewById(R.id.spinnerNotificationAmount);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.numberOfNotifications, android.R.layout.simple_spinner_item);
@@ -56,14 +62,12 @@ public class NotificationManagerActivity extends AppCompatActivity implements Ad
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
-
         // Toolbar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbarNotificationManager);
         myToolbar.setTitle("Notification Settings");
         setSupportActionBar(myToolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-
         // Switches
         swMonday = findViewById(R.id.switchMonday);
         swMonday.setOnCheckedChangeListener(this::setDay);
@@ -79,17 +83,38 @@ public class NotificationManagerActivity extends AppCompatActivity implements Ad
         swSaturday.setOnCheckedChangeListener(this::setDay);
         swSunday = findViewById(R.id.switchSunday);
         swSunday.setOnCheckedChangeListener(this::setDay);
-
+        // Button
+        btnSaveNotificationSettings = findViewById(R.id.btnSaveNotificationSettings);
+        btnSaveNotificationSettings.setOnClickListener(this::saveNotificationSettings);
         // Initialize DB Helper
         myDB = new DatabaseHelper(this);
 
         // Check for DB content
+        readNotificationSettingsFromDB();
+        // Display Content in UI
         setNotificationInfo();
+        // set current notificationNumber
+        notificationSettings.setNotificationNumber(Integer.parseInt(spinner.getSelectedItem().toString()));
+    }
+
+    private void saveNotificationSettings(View view) {
+        myDB = new DatabaseHelper(this);
+        Week week = notificationSettings.getWeek();
+        int numberOfNotifications = notificationSettings.getNotificationNumber();
+        int monday = setDayInDBFormat(week.isMonday());
+        int tuesday = setDayInDBFormat(week.isTuesday());
+        int wednesday = setDayInDBFormat(week.isWednesday());
+        int thursday = setDayInDBFormat(week.isThursday());
+        int friday = setDayInDBFormat(week.isFriday());
+        int saturday = setDayInDBFormat(week.isSaturday());
+        int sunday = setDayInDBFormat(week.isSunday());
+        myDB.updateNotificationSettings(numberOfNotifications, monday, tuesday, wednesday, thursday, friday, saturday, sunday);
+        Toast.makeText(NotificationManagerActivity.this, "Notification Settings Saved", Toast.LENGTH_LONG).show();
     }
 
     private void setDay(CompoundButton compoundButton, boolean b) {
         int currentSwitch = compoundButton.getId();
-        Week week = this.notificationStatus.getWeek();
+        Week week = this.notificationSettings.getWeek();
         // sets day in the week object
         if (currentSwitch == swMonday.getId()) {
             week.setDay(Day.MONDAY, b);
@@ -109,12 +134,63 @@ public class NotificationManagerActivity extends AppCompatActivity implements Ad
     }
 
     private void setNotificationInfo() {
-        Cursor res = myDB.getAllFolders();
-        if(res.getCount()==0){
+        if(userSettingsExistence == false){
             // show message
             showMessage("Set your Notifications Perferences!", "Here, you can tell the app at which days in the week and how many times you want to be notified. At the moment, all notifications are disabled.");
-            myDB.insertNewNotificationStatus(notificationStatus.getNotificationNumber());
             return;
+        } else {
+            Week week = notificationSettings.getWeek();
+            // set status of switches
+            swMonday.setChecked(week.isMonday());
+            swTuesday.setChecked(week.isTuesday());
+            swWednesday.setChecked(week.isWednesday());
+            swThursday.setChecked(week.isThursday());
+            swFriday.setChecked(week.isFriday());
+            swSaturday.setChecked(week.isSaturday());
+            swSunday.setChecked(week.isSunday());
+            // set spinner value
+            spinner.setSelection(notificationSettings.getNotificationNumber());
+        }
+    }
+
+    private boolean readNotificationSettingsFromDB() {
+        userSettingsExistence = false;
+        Cursor res = myDB.getNotificationSettings();
+
+        if(res.getCount()==0){
+            // creates default entry if userSettings don´t exist
+            myDB.insertNewNotificationSettings(notificationSettings.getNotificationNumber());
+        } else {
+            res.moveToNext();
+            // reads notificationSettings from DB and stores them in NotificationSettings object
+            notificationSettings.setNotificationNumber(Integer.parseInt(res.getString(1)));
+            setDay(Day.MONDAY, Integer.parseInt((res.getString(2))));
+            setDay(Day.TUESDAY, Integer.parseInt((res.getString(3))));
+            setDay(Day.WEDNESDAY, Integer.parseInt((res.getString(4))));
+            setDay(Day.THURSDAY, Integer.parseInt((res.getString(5))));
+            setDay(Day.FRIDAY, Integer.parseInt((res.getString(6))));
+            setDay(Day.SATURDAY, Integer.parseInt((res.getString(7))));
+            setDay(Day.SUNDAY, Integer.parseInt((res.getString(8))));
+            userSettingsExistence = true;
+        }
+
+        return userSettingsExistence;
+    }
+
+    private void setDay(Day day, int booleanAsInt) {
+        Week week = this.notificationSettings.getWeek();
+        if (booleanAsInt == 0) {
+            week.setDay(day, false);
+        } else {
+            week.setDay(day, true);
+        }
+    }
+
+    private int setDayInDBFormat(boolean day) {
+        if (day == false) {
+            return 0;
+        } else {
+            return 1;
         }
     }
 
@@ -129,7 +205,7 @@ public class NotificationManagerActivity extends AppCompatActivity implements Ad
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        int currentNotificationNumber = Integer.parseInt(parent.getItemAtPosition(position).toString());
+        notificationSettings.setNotificationNumber(Integer.parseInt(parent.getItemAtPosition(position).toString()));
     }
 
     @Override
@@ -147,7 +223,4 @@ public class NotificationManagerActivity extends AppCompatActivity implements Ad
         return super.onOptionsItemSelected(item);
     }
 
-    public int getCurrentNotificationNumber() {
-        return currentNotificationNumber;
-    }
 }
