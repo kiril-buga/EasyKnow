@@ -8,10 +8,18 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import java.sql.Connection;
+
+import EasyKnowLib.Day;
+import EasyKnowLib.Week;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
+    // DB name
     public static final String DATABASE_NAME = "words.db";
+    // Table names
     public static final String TABLE_WORDS = "words_table";
     public static final String TABLE_FOLDERS = "folders_table";
+    public static final String TABLE_NOTIFICATION_SETTINGS = "notification_settings_table";
     public static final String TABLE_NOTIFICATION_STATUS = "notification_status_table";
 
     //WORDS_TABLE
@@ -25,15 +33,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String FOLDER_COL_1 = "ID";
     public static final String FOLDER_COL_2 = "FOLDER";
     //NOTIFICATION_STATUS_TABLE
-    public static final String NOTIFICATION_STATUS_COL1 = "NOTIFICATION_NUMBER";
-    public static final String NOTIFICATION_STATUS_COL2 = "NUMBER_OF_NOTIFICATIONS_SENT";
-    public static final String NOTIFICATION_STATUS_COL3 = "MONDAY";
-    public static final String NOTIFICATION_STATUS_COL4 = "TUESDAY";
-    public static final String NOTIFICATION_STATUS_COL5 = "WEDNESDAY";
-    public static final String NOTIFICATION_STATUS_COL6 = "THURSDAY";
-    public static final String NOTIFICATION_STATUS_COL7 = "FRIDAY";
-    public static final String NOTIFICATION_STATUS_COL8 = "SATURDAY";
-    public static final String NOTIFICATION_STATUS_COL9 = "SUNDAY";
+    public static final String NOTIFICATION_SETTINGS_COL1 = "NOTIFICATION_ID";
+    public static final String NOTIFICATION_SETTINGS_COL2 = "NOTIFICATION_NUMBER";
+    public static final String NOTIFICATION_SETTINGS_COL3 = "MONDAY";
+    public static final String NOTIFICATION_SETTINGS_COL4 = "TUESDAY";
+    public static final String NOTIFICATION_SETTINGS_COL5 = "WEDNESDAY";
+    public static final String NOTIFICATION_SETTINGS_COL6 = "THURSDAY";
+    public static final String NOTIFICATION_SETTINGS_COL7 = "FRIDAY";
+    public static final String NOTIFICATION_SETTINGS_COL8 = "SATURDAY";
+    public static final String NOTIFICATION_SETTINGS_COL9 = "SUNDAY";
+    //NOTIFICATION_STATUS_TABLE
+    public static final String NOTIFICATION_STATUS_COL1 = "NOTIFICATION_STATUS_ID";
+    public static final String NOTIFICATION_STATUS_COL2 = "NOTIFICATION_DATE";
+    public static final String NOTIFICATION_STATUS_COL3 = "NUMBER_OF_NOTIFICATIONS_SENT";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -41,13 +53,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_FOLDERS + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, FOLDER TEXT UNIQUE)");
-        db.execSQL("create table " + TABLE_WORDS + "(ID INTEGER PRIMARY KEY AUTOINCREMENT,WORD TEXT, MEANING TEXT, LEARN_STATUS INTEGER," +
-                " FOLDER_ID INTEGER, LAST_NOTIFICATION_TIME TEXT)");
+        // Create table FOLDERS
+        db.execSQL("create table " + TABLE_FOLDERS + "(" + FOLDER_COL_1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                FOLDER_COL_2 + " TEXT UNIQUE)");
+        // Create table Words
+        db.execSQL("create table " + TABLE_WORDS + "(" + WORD_COL_1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                WORD_COL_2 + " TEXT, " +
+                WORD_COL_3 + " TEXT, " +
+                WORD_COL_4 + " INTEGER, " +
+                WORD_COL_5 + " INTEGER, " +
+                WORD_COL_6 + " TEXT)");
+        // Create table NOTIFICATION_SETTINGS
         // Boolean values are stored as integers 0 (false) and 1 (true)
-        db.execSQL("create table " + TABLE_NOTIFICATION_STATUS + "(NOTIFICATION_NUMBER INTEGER DEFAULT 0, NUMBER_OF_NOTIFICATIONS_SENT INTEGER, MONDAY INTEGER DEFAULT 0 NOT NULL CHECK (TUESDAY IN (0, 1)), " +
-                "TUESDAY INTEGER DEFAULT 0 NOT NULL CHECK (TUESDAY IN (0, 1)), WEDNESDAY INTEGER DEFAULT 0 NOT NULL CHECK (WEDNESDAY IN (0, 1)), THURSDAY INTEGER DEFAULT 0 NOT NULL CHECK (THURSDAY IN (0, 1)), " +
-                "FRIDAY INTEGER DEFAULT 0 NOT NULL CHECK (FRIDAY IN (0, 1)), SATURDAY INTEGER DEFAULT 0 NOT NULL CHECK (SATURDAY IN (0, 1)), SUNDAY INTEGER DEFAULT 0 NOT NULL CHECK (SUNDAY IN (0, 1)))");
+        db.execSQL("create table " + TABLE_NOTIFICATION_SETTINGS + "(" + NOTIFICATION_SETTINGS_COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                NOTIFICATION_SETTINGS_COL2 + " INTEGER, " +
+                NOTIFICATION_SETTINGS_COL3 + " INTEGER DEFAULT 0 NOT NULL CHECK (" + NOTIFICATION_SETTINGS_COL3 + " IN (0, 1)), " +
+                NOTIFICATION_SETTINGS_COL4 + " INTEGER DEFAULT 0 NOT NULL CHECK (" + NOTIFICATION_SETTINGS_COL4 + " IN (0, 1)), " +
+                NOTIFICATION_SETTINGS_COL5 + " INTEGER DEFAULT 0 NOT NULL CHECK (" + NOTIFICATION_SETTINGS_COL5 + " IN (0, 1)), " +
+                NOTIFICATION_SETTINGS_COL6 + " INTEGER DEFAULT 0 NOT NULL CHECK (" + NOTIFICATION_SETTINGS_COL6 + " IN (0, 1)), " +
+                NOTIFICATION_SETTINGS_COL7 + " INTEGER DEFAULT 0 NOT NULL CHECK (" + NOTIFICATION_SETTINGS_COL7 + " IN (0, 1)), " +
+                NOTIFICATION_SETTINGS_COL8 + " INTEGER DEFAULT 0 NOT NULL CHECK (" + NOTIFICATION_SETTINGS_COL8 + " IN (0, 1)), " +
+                NOTIFICATION_SETTINGS_COL9 + " INTEGER DEFAULT 0 NOT NULL CHECK (" + NOTIFICATION_SETTINGS_COL9 + " IN (0, 1)))");
+        // Create Table NOTIFICATION_STATUS
+        db.execSQL("create table " + TABLE_NOTIFICATION_STATUS + "(" + NOTIFICATION_STATUS_COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                NOTIFICATION_SETTINGS_COL2 + " TEXT UNIQUE, " +
+                NOTIFICATION_STATUS_COL3 + " INTEGER DEFAULT 0 NOT NULL)");
     }
 
     @Override
@@ -69,11 +99,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
     }
 
-    public boolean insertNewNotificationStatus(int notificationNumber){
+    public boolean insertNewNotificationSettings(int notificationNumber){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(NOTIFICATION_STATUS_COL2, notificationNumber);
-        long result = db.insert(TABLE_NOTIFICATION_STATUS, null, contentValues);
+        contentValues.put(NOTIFICATION_SETTINGS_COL2, notificationNumber);
+        long result = db.insert(TABLE_NOTIFICATION_SETTINGS, null, contentValues);
         if(result == -1)
             return false;
         else
@@ -111,6 +141,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select "+FOLDER_COL_1+" from "+TABLE_FOLDERS +" where "+FOLDER_COL_2 + " = ?",new String[]{name});
         return res;
+    }
+
+    public Cursor getNotificationSettings() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select * from "+TABLE_NOTIFICATION_SETTINGS,null);
+        return res;
+    }
+
+    public boolean updateNotificationSettings(int notificationNumber, int monday, int tuesday, int wednesday,
+                                            int thursday, int friday, int saturday, int sunday) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues res = new ContentValues();
+        String id = "1";
+        res.put(NOTIFICATION_SETTINGS_COL2,notificationNumber); //These Fields should be your String values of actual column names
+        res.put(NOTIFICATION_SETTINGS_COL3,monday);
+        res.put(NOTIFICATION_SETTINGS_COL4,tuesday);
+        res.put(NOTIFICATION_SETTINGS_COL5,wednesday);
+        res.put(NOTIFICATION_SETTINGS_COL6,thursday);
+        res.put(NOTIFICATION_SETTINGS_COL7,friday);
+        res.put(NOTIFICATION_SETTINGS_COL8,saturday);
+        res.put(NOTIFICATION_SETTINGS_COL9,sunday);
+        long result = db.update(TABLE_NOTIFICATION_SETTINGS, res, NOTIFICATION_SETTINGS_COL1 + " = " + id, null);
+        if(result == -1)
+            return false;
+        else
+            return true;
     }
 
 /*    public Cursor getWord(int folderId, int learnStatus, String time) {
