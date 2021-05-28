@@ -73,7 +73,6 @@ public class Services extends Service {
 
         //Toast.makeText(this, calendar.toString(),Toast.LENGTH_LONG).show();
 
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
     }
 
     @Override

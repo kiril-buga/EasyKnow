@@ -109,12 +109,12 @@ public class MainActivity extends AppCompatActivity {
                         0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                 //Convert image type to bitmap
-                Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.picture);
+                Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_foreground);
 
                 Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_1_ID)
                         .setSmallIcon(R.drawable.ic_message)
                         .setContentTitle("Notification")
-                        .setContentText("Do you know the meaning of "+ word + " ?")
+                        .setContentText("Do you know the meaning of "+ word + "?")
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                         .setColor(Color.BLUE)
