@@ -1,7 +1,5 @@
 package com.example.myapplication;
 
-import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,17 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import EasyKnowLib.LearnFolder;
-import EasyKnowLib.LearnItem;
+import EasyKnowLib.Word;
 
 public class WordsAdapter extends RecyclerView.Adapter<WordsAdapter.MyViewHolder> {
-    private ArrayList<LearnItem> wordsList;
+    private ArrayList<Word> wordsList;
     private WordsAdapter.RecyclerViewClickListener listener;
 
 
-    public WordsAdapter(ArrayList<LearnItem> wordsList, RecyclerViewClickListener listener) {
+    public WordsAdapter(ArrayList<Word> wordsList, RecyclerViewClickListener listener) {
         this.wordsList = wordsList;
         this.listener = listener;
     }
