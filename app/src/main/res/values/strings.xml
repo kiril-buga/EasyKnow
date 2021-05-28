@@ -2,6 +2,7 @@
     <string name="app_name">My Application</string>
     <string name="show">Show</string>
     <string-array name="numberOfNotifications">
+        <item>0</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
