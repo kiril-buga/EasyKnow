@@ -55,7 +55,7 @@ public class AddWordActivity extends AppCompatActivity {
 
 
         if(sWord.isEmpty() || sMeaning.isEmpty()){
-            editTextWord.setError("Word/Meaning is required");
+            editTextWord.setError("Word and Meaning are required");
             editTextWord.requestFocus();
             return;
         }

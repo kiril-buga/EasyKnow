@@ -5,10 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -28,10 +30,13 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import EasyKnowLib.LearnFolder;
 import Notifications.NotificationManagerActivity;
 import Notifications.NotificationReceiver;
+import Notifications.NotificationsService;
+import Notifications.Services;
 
 import static com.example.myapplication.EasyKnow.CHANNEL_1_ID;
 
@@ -85,46 +90,67 @@ public class MainActivity extends AppCompatActivity {
         myToolbar.setTitle("My Topics");
         setSupportActionBar(myToolbar);
 
-        //Convert image type to bitmap
-        Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.picture);
         //Notifications
         notificationManager = NotificationManagerCompat.from(this);
-
-
-
 
         btShow.setOnClickListener(new View.OnClickListener() {
             //@Override
             public void onClick(View v) {
+
+                String word = "random word"; //Get the next word to check from DB
 
                 Intent activityIntent = new Intent(getApplicationContext(), MainActivity.class);
                 PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(),
                         0, activityIntent, 0);
 
                 Intent broadcastIntent = new Intent(getApplicationContext(), NotificationReceiver.class);
-                broadcastIntent.putExtra("toastMesage", "This is a message");
+                broadcastIntent.putExtra("toastMessage", "This is a message");
                 PendingIntent actionIntent = PendingIntent.getBroadcast(getApplicationContext(),
                         0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                //Convert image type to bitmap
+                Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.picture);
 
                 Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_1_ID)
                         .setSmallIcon(R.drawable.ic_message)
                         .setContentTitle("Notification")
-                        .setContentText("This is a notification")
+                        .setContentText("Do you know the meaning of "+ word + " ?")
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                         .setColor(Color.BLUE)
                         .setLargeIcon(icon)
+                        //.setStyle(new NotificationCompat.BigTextStyle()
+                        //    .bigText("This is a random long text. Bla Bla BlaThis is a random long text. Bla Bla BlaThis is a random long text. Bla Bla BlaThis is a random long text. Bla Bla BlaThis is a random long text. Bla Bla BlaThis is a random long text. Bla Bla BlaThis is a random long text. Bla Bla Bla")
+                        //.setBigContentTitle("Big Content Title")
+                        //.setSummaryText("Summary Text"))
                         .setContentIntent(contentIntent)
                         .setAutoCancel(true)
                         .setOnlyAlertOnce(true)
-                        .addAction(R.mipmap.ic_launcher, "Toast", actionIntent)
+                        .addAction(R.mipmap.ic_launcher, "Yes", actionIntent)
+                        .addAction(R.mipmap.ic_launcher, "No", actionIntent)
                         .build();
 
 
-                notificationManager.notify(1, notification);
+                notificationManager.notify(2, notification);
+                startService(v);
             }
         });
 
+    }
+
+    //Foreground service
+    public void startService(View v) {
+        String input = "This is notification service";
+
+        Intent serviceIntent = new Intent(this, Services.class);
+        serviceIntent.putExtra("inputExtra", input);
+
+        ContextCompat.startForegroundService(this, serviceIntent);
+    }
+
+    public void stopService(View v) {
+        Intent serviceIntent = new Intent(this, Services.class);
+        stopService(serviceIntent);
     }
 
     private void setAdapter() {

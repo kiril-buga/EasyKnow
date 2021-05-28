@@ -6,8 +6,8 @@ import android.app.NotificationManager;
 import android.os.Build;
 
 public class EasyKnow extends Application {
+    public static final String CHANNEL_0_ID = "ServiceChannel";
     public static final String CHANNEL_1_ID = "Check answer";
-    //public static final String CHANNEL_2_ID;
 
     @Override
     public void onCreate() {
@@ -18,6 +18,12 @@ public class EasyKnow extends Application {
 
     private void createNotificationChannels() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel serviceChannel = new NotificationChannel(
+                    CHANNEL_0_ID,
+                    "Service Channel",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+
             NotificationChannel channel1 = new NotificationChannel(
                     CHANNEL_1_ID,
                     "Check answer",
@@ -25,8 +31,9 @@ public class EasyKnow extends Application {
             );
             channel1.setDescription("This channel checks your answers");
 
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel1);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(serviceChannel);
+            manager.createNotificationChannel(channel1);
         }
     }
 }

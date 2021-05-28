@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.myapplication">
-
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <application
         android:name=".EasyKnow"
         android:allowBackup="true"
@@ -23,6 +23,9 @@
             </intent-filter>
         </activity>
         <receiver android:name="Notifications.NotificationReceiver"/>
+        <service android:name="Notifications.Services"/>
+        <service android:name="Notifications.NotificationsService"
+            android:exported="false"/>
     </application>
 
 </manifest>
