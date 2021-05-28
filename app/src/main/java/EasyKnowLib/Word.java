@@ -1,14 +1,18 @@
 package EasyKnowLib;
 
+import java.time.LocalDateTime;
+
 public class Word {
+    // WordData
     private String title;
     private String meaning;
-    private LearnItemStatus learnStatus;
-
+    // TestData
+    private LocalDateTime lastNotificationTime;
+    private boolean LastTestSuccessful;
+    private int numberOfSuccessfulAnswers = 0;
     public Word(String title, String meaning) {
         this.title = title;
         this.meaning = meaning;
-        this.learnStatus = new LearnItemStatus();
     }
 
     public String getTitle() {
@@ -27,11 +31,28 @@ public class Word {
         this.meaning = meaning;
     }
 
-    public LearnItemStatus getLearnStatus() {
-        return learnStatus;
+    public LocalDateTime getLastTestTime() {
+        return lastNotificationTime;
     }
 
-    public void setLearnStatus(LearnItemStatus learnStatus) {
-        this.learnStatus = learnStatus;
+    public void setLastTestTime(LocalDateTime lastTestTime) {
+        this.lastNotificationTime = lastTestTime;
     }
+
+    public boolean isLastTestSuccessful() {
+        return LastTestSuccessful;
+    }
+
+    public void setLastTestSuccessful(boolean lastTestSuccessful) {
+        LastTestSuccessful = lastTestSuccessful;
+    }
+
+    public int getNumberOfSuccessfulAnswers() {
+        return numberOfSuccessfulAnswers;
+    }
+
+    public void setNumberOfSuccessfulAnswers(int numberOfSuccessfulAnswers) {
+        this.numberOfSuccessfulAnswers = numberOfSuccessfulAnswers;
+    }
+
 }

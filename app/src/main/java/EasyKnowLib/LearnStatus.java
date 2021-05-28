@@ -4,30 +4,39 @@ import java.time.LocalDateTime;
 
 public abstract class LearnStatus {
     private LocalDateTime lastTestTime;
-    private int numberOfViews;
     private boolean learned;
+    private int numberOfSuccessfulAnswers;
+    private boolean LastTestSuccessful;
+
+    public LocalDateTime getLastTestTime() {
+        return lastTestTime;
+    }
 
     public void setLastTestTime(LocalDateTime lastTestTime) {
         this.lastTestTime = lastTestTime;
     }
 
-    public void setNumberOfViews(int numberOfViews) {
-        this.numberOfViews = numberOfViews;
+    public boolean isLearned() {
+        return learned;
     }
 
     public void setLearned(boolean learned) {
         this.learned = learned;
     }
 
-    public LocalDateTime getLocalDateTime() {
-        return lastTestTime;
+    public int getNumberOfSuccessfulAnswers() {
+        return numberOfSuccessfulAnswers;
     }
 
-    public int getNumberOfViews() {
-        return numberOfViews;
+    public void setNumberOfSuccessfulAnswers(int numberOfSuccessfulAnswers) {
+        this.numberOfSuccessfulAnswers = numberOfSuccessfulAnswers;
     }
 
-    public boolean isLearned() {
-        return learned;
+    public boolean isLastTestSuccessful() {
+        return LastTestSuccessful;
+    }
+
+    public void setLastTestSuccessful(boolean lastTestSuccessful) {
+        LastTestSuccessful = lastTestSuccessful;
     }
 }
