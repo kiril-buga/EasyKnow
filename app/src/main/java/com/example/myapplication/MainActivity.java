@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
@@ -19,6 +20,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import EasyKnowLib.LearnFolder;
+import EasyKnowLib.TestDataGenerator;
 import Notifications.NotificationManagerActivity;
 import Notifications.NotificationReceiver;
 import Notifications.NotificationsService;
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AddFolderActivity addFolderActivity;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
         //Database
         myDB = new DatabaseHelper(this);
 
+/*        TestDataGenerator testDataGenerator = new TestDataGenerator();
+        testDataGenerator.createNewTestData(myDB);*/
 
         //Folders
         recyclerView = findViewById(R.id.recyclerView);
