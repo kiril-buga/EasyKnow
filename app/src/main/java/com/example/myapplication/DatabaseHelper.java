@@ -63,7 +63,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 WORD_COL_3 + " TEXT, " +
                 WORD_COL_4 + " INTEGER DEFAULT 0 NOT NULL CHECK (" + WORD_COL_4 + " IN (0, 1)), " +
                 WORD_COL_5 + " TEXT, " +
-                WORD_COL_6 + " INTEGER DEFAULT 0 NOT NULL CHECK(" + WORD_COL_6 + "), " +
+                WORD_COL_6 + " INTEGER DEFAULT 0, " +
                 WORD_COL_7 + " INTEGER NOT NULL)");
         // Create table NOTIFICATION_SETTINGS
         // Boolean values are stored as integers 0 (false) and 1 (true)
