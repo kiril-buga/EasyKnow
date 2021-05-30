@@ -15,13 +15,14 @@ public class WordFinder {
     private ArrayList<Word> words;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public WordFinder(DatabaseHelper databaseHelper) {
+    public WordFinder() {
         words = new ArrayList<>();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public Word getWord(DatabaseHelper myDB) {
         Word word = null;
+        boolean wordFound = false;
 
         Cursor res = myDB.getWordsWithNoNotificationDate();
         if (res.getCount() != 0) {
@@ -35,13 +36,23 @@ public class WordFinder {
         if (words.size() < 2) {
             word = words.get(0);
         } else {
-            for (int i = 1; i < words.size(); i++) {
-                word = words.get(0);
-                int lastWordLearnStatus = words.get(i - 1).getLearnStatus();
+            word = words.get(0);
+            int lowestLearnStatus = words.get(0).getLearnStatus();
+
+            if (lowestLearnStatus == 0) {
+                return word;
+            }
+
+            for (int i = 1; i < words.size() && wordFound == false; i++) {
                 int currentWordLearnStatus = words.get(i).getLearnStatus();
 
-                if (currentWordLearnStatus < lastWordLearnStatus)
+                if (currentWordLearnStatus == 0) {
                     word = words.get(i);
+                    wordFound = true;
+                } else if (currentWordLearnStatus < lowestLearnStatus) {
+                    word = words.get(i);
+                    lowestLearnStatus = currentWordLearnStatus;
+                }
             }
         }
         return word;
