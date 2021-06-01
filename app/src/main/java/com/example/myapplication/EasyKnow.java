@@ -21,13 +21,13 @@ public class EasyKnow extends Application {
             NotificationChannel serviceChannel = new NotificationChannel(
                     CHANNEL_0_ID,
                     "Service Channel",
-                    NotificationManager.IMPORTANCE_DEFAULT
+                    NotificationManager.IMPORTANCE_MIN
             );
 
             NotificationChannel channel1 = new NotificationChannel(
                     CHANNEL_1_ID,
                     "Check answer",
-                    NotificationManager.IMPORTANCE_HIGH
+                    NotificationManager.IMPORTANCE_LOW
             );
             channel1.setDescription("This channel checks your answers");
 

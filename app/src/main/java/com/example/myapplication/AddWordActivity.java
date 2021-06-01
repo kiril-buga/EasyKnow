@@ -72,7 +72,7 @@ public class AddWordActivity extends AppCompatActivity {
                 //Show data
                 Toast.makeText(AddWordActivity.this, "FolderID: " + sFolder_id, Toast.LENGTH_LONG).show();
 
-                boolean isInserted = myDB.insertNewWord(sWord, sMeaning, learn_status, sFolder_id, "21.05.2021");
+                boolean isInserted = myDB.insertNewWord(sWord, sMeaning, learn_status, sFolder_id, "");
 
                 if (isInserted) {
                     Toast.makeText(AddWordActivity.this, "Data inserted", Toast.LENGTH_LONG).show();

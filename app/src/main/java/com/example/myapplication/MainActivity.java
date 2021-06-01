@@ -19,7 +19,14 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -97,41 +104,12 @@ public class MainActivity extends AppCompatActivity {
             //@Override
             public void onClick(View v) {
 
-                String word = "random word"; //Get the next word to check from DB
-
-                Intent activityIntent = new Intent(getApplicationContext(), MainActivity.class);
-                PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(),
-                        0, activityIntent, 0);
-
-                Intent broadcastIntent = new Intent(getApplicationContext(), NotificationReceiver.class);
-                broadcastIntent.putExtra("toastMessage", "This is a message");
-                PendingIntent actionIntent = PendingIntent.getBroadcast(getApplicationContext(),
-                        0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                //Convert image type to bitmap
-                Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_foreground);
-
-                Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_1_ID)
-                        .setSmallIcon(R.drawable.ic_message)
-                        .setContentTitle("Notification")
-                        .setContentText("Do you know the meaning of "+ word + "?")
-                        .setPriority(NotificationCompat.PRIORITY_HIGH)
-                        .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                        .setColor(Color.BLUE)
-                        .setLargeIcon(icon)
-                        //.setStyle(new NotificationCompat.BigTextStyle()
-                        //    .bigText("This is a random long text. Bla Bla BlaThis is a random long text. Bla Bla BlaThis is a random long text. Bla Bla BlaThis is a random long text. Bla Bla BlaThis is a random long text. Bla Bla BlaThis is a random long text. Bla Bla BlaThis is a random long text. Bla Bla Bla")
-                        //.setBigContentTitle("Big Content Title")
-                        //.setSummaryText("Summary Text"))
-                        .setContentIntent(contentIntent)
-                        .setAutoCancel(true)
-                        .setOnlyAlertOnce(true)
-                        .addAction(R.mipmap.ic_launcher, "Yes", actionIntent)
-                        .addAction(R.mipmap.ic_launcher, "No", actionIntent)
-                        .build();
 
 
-                notificationManager.notify(2, notification);
+
+
+
+
                 startService(v);
             }
         });
@@ -140,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Foreground service
     public void startService(View v) {
-        String input = "This is notification service";
+        String input = "This service is currently running";
 
         Intent serviceIntent = new Intent(this, Services.class);
         serviceIntent.putExtra("inputExtra", input);
