@@ -20,7 +20,7 @@ import androidx.core.app.NotificationCompat;
 import com.example.myapplication.MainActivity;
 
 public class NotificationReceiver extends BroadcastReceiver {
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT_WATCH)
+
     @Override
     public void onReceive(Context context, Intent intent) {
         if(intent.hasExtra("toastMessage")) {
@@ -29,15 +29,20 @@ public class NotificationReceiver extends BroadcastReceiver {
         }
 
         //Remote Input
-        Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
-        if(remoteInput != null) {
+        Bundle remoteInput = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT_WATCH) {
+            remoteInput = RemoteInput.getResultsFromIntent(intent);
+        }
+        if(remoteInput != null && intent.hasExtra("word") && intent.hasExtra("meaning")) {
             CharSequence answerText = remoteInput.getCharSequence("key_text_answer");
+            String word = intent.getStringExtra("word");
+            String meaning = intent.getStringExtra("meaning");
             //Message answer = new Message(answerText, null);
             String reply;
-            if(answerText.equals("meaning")){
+            if(answerText.equals(meaning)){
                 reply = new String("Congratulations! " + answerText + " is the correct answer.");
             } else {
-                reply = new String(String.valueOf(Html.fromHtml("Sorry <b>random word</b> means <b>meaning</b>. Try next time")));
+                reply = new String("Sorry "+word+" means " + meaning+ ", try again");
             }
             intent = new Intent(context, NotificationsService.class);
             intent.putExtra("finished","true");
@@ -47,7 +52,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
         }
 
-        Toast.makeText(context, "Notification Receiver",Toast.LENGTH_LONG).show();
+        //Toast.makeText(context, "Notification Receiver",Toast.LENGTH_LONG).show();
         //Intent intent1 = new Intent(context, NotificationsService.class);
         //context.startService(intent1);
     }

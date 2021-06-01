@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import EasyKnowLib.LearnFolder;
+import EasyKnowLib.WordFinder;
 import Notifications.NotificationManagerActivity;
 import Notifications.NotificationReceiver;
 import Notifications.NotificationsService;
@@ -50,6 +51,7 @@ import static com.example.myapplication.EasyKnow.CHANNEL_1_ID;
 public class MainActivity extends AppCompatActivity {
 
     public DatabaseHelper myDB;
+    private WordFinder wordFinder;
     private ArrayList<LearnFolder> foldersList;
 
     private NotificationManagerCompat notificationManager;
@@ -65,9 +67,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Database
+        //Database and wordFinder
         myDB = new DatabaseHelper(this);
-
+        wordFinder = new WordFinder();
 
         //Folders
         recyclerView = findViewById(R.id.recyclerView);
@@ -85,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
         btAdd.setOnClickListener((view)->{
             Intent intent = new Intent(MainActivity.this, AddFolderActivity.class);
             startActivity(intent);
-            Toast.makeText(this, "The button was clicked " , Toast.LENGTH_LONG).show();
         });
 
         //Assign variable
@@ -104,12 +105,19 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
 
+                try {
+                    String word = wordFinder.getWord(myDB).getTitle(); //Get the next word to check from DB
+                    String meaning = wordFinder.getWord(myDB).getMeaning(); //Get its meaning
+                    if(!word.equals(null) && !meaning.equals(null)) {
+                        startService(v);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Please make sure you add enough words",Toast.LENGTH_SHORT ).show();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "Please make sure you add enough words",Toast.LENGTH_SHORT ).show();
+                }
 
 
-
-
-
-                startService(v);
             }
         });
 

@@ -26,7 +26,7 @@ import static com.example.myapplication.EasyKnow.CHANNEL_0_ID;
 
 public class Services extends Service {
 
-    DatabaseHelper myDB;
+    private DatabaseHelper myDB;
 
     @Override
     public void onCreate() {
@@ -69,8 +69,10 @@ public class Services extends Service {
     }
 
     private void setAlarm() {
-        Calendar calendar = Calendar.getInstance();
 
+
+
+        Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
 
         Toast.makeText(getApplicationContext(), calendar.getTime().toString(),Toast.LENGTH_LONG).show();
