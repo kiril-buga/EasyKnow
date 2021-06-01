@@ -27,7 +27,7 @@ public class WordFinder {
         Cursor res = myDB.getWordsWithNoNotificationDate();
         if (res.getCount() != 0) {
             loadWordsFromDB(res);
-            word = words.get((int) (Math.random()) * (words.size() - 1));
+            word = words.get(0);
             return word;
         }
 
