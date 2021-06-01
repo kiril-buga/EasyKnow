@@ -103,7 +103,7 @@ public class WordActivity extends AppCompatActivity {
         StringBuffer bufferWords = new StringBuffer();
         StringBuffer bufferMeanings = new StringBuffer();
         while(res.moveToNext()) {
-            if(res.getString(4).equals(folderId)) {
+            if(res.getString(6).equals(folderId)) {
                 bufferWords.append(res.getString(1) + "\n");
                 bufferMeanings.append(res.getString(2) + "\n");
             }

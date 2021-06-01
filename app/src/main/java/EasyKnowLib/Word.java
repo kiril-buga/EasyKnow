@@ -1,14 +1,39 @@
 package EasyKnowLib;
 
+import java.time.LocalDateTime;
+
 public class Word {
+    // WordData
+    private int id;
     private String title;
     private String meaning;
-    private LearnItemStatus learnStatus;
+    // TestData
+    private LocalDateTime lastNotificationTime;
+    private boolean LastTestSuccessful;
+    private int learnStatus = 0;
+    private int folderId;
 
     public Word(String title, String meaning) {
         this.title = title;
         this.meaning = meaning;
-        this.learnStatus = new LearnItemStatus();
+    }
+
+    public Word(int id, String title, String meaning, LocalDateTime lastNotificationTime, boolean lastTestSuccessful, int learnStatus, int folderId) {
+        this.id = id;
+        this.title = title;
+        this.meaning = meaning;
+        this.lastNotificationTime = lastNotificationTime;
+        LastTestSuccessful = lastTestSuccessful;
+        this.learnStatus = learnStatus;
+        this.folderId = folderId;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -27,11 +52,35 @@ public class Word {
         this.meaning = meaning;
     }
 
-    public LearnItemStatus getLearnStatus() {
+    public LocalDateTime getLastNotificationTime() {
+        return lastNotificationTime;
+    }
+
+    public void setLastNotificationTime(LocalDateTime lastNotificationTime) {
+        this.lastNotificationTime = lastNotificationTime;
+    }
+
+    public boolean isLastTestSuccessful() {
+        return LastTestSuccessful;
+    }
+
+    public void setLastTestSuccessful(boolean lastTestSuccessful) {
+        LastTestSuccessful = lastTestSuccessful;
+    }
+
+    public int getLearnStatus() {
         return learnStatus;
     }
 
-    public void setLearnStatus(LearnItemStatus learnStatus) {
+    public void setLearnStatus(int learnStatus) {
         this.learnStatus = learnStatus;
+    }
+
+    public int getFolderId() {
+        return folderId;
+    }
+
+    public void setFolderId(int folderId) {
+        this.folderId = folderId;
     }
 }

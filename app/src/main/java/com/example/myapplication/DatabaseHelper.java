@@ -26,9 +26,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String WORD_COL_1 = "ID";
     public static final String WORD_COL_2 = "WORD";
     public static final String WORD_COL_3 = "MEANING";
-    public static final String WORD_COL_4 = "LEARN_STATUS";
-    public static final String WORD_COL_5 = "FOLDER_ID";
-    public static final String WORD_COL_6 = "LAST_NOTIFICATION_TIME";
+    public static final String WORD_COL_4 = "LAST_TEST_SUCCESSFULL";
+    public static final String WORD_COL_5 = "LAST_NOTIFICATION_TIME";
+    public static final String WORD_COL_6 = "LEARN_STATUS";
+    public static final String WORD_COL_7 = "FOLDER_ID";
     //FOLDERS_TABLE
     public static final String FOLDER_COL_1 = "ID";
     public static final String FOLDER_COL_2 = "FOLDER";
@@ -60,9 +61,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("create table " + TABLE_WORDS + "(" + WORD_COL_1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 WORD_COL_2 + " TEXT, " +
                 WORD_COL_3 + " TEXT, " +
-                WORD_COL_4 + " INTEGER, " +
-                WORD_COL_5 + " INTEGER, " +
-                WORD_COL_6 + " TEXT)");
+                WORD_COL_4 + " INTEGER DEFAULT 0 NOT NULL CHECK (" + WORD_COL_4 + " IN (0, 1)), " +
+                WORD_COL_5 + " TEXT, " +
+                WORD_COL_6 + " INTEGER DEFAULT 0, " +
+                WORD_COL_7 + " INTEGER NOT NULL)");
         // Create table NOTIFICATION_SETTINGS
         // Boolean values are stored as integers 0 (false) and 1 (true)
         db.execSQL("create table " + TABLE_NOTIFICATION_SETTINGS + "(" + NOTIFICATION_SETTINGS_COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -110,14 +112,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
     }
 
-    public boolean insertNewWord(String word, String meaning, int learn_status, String folder_id, String last_notification_time){
+    public boolean insertNewWord(String word, String meaning, String folder_id){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(WORD_COL_2, word);
         contentValues.put(WORD_COL_3, meaning);
-        contentValues.put(WORD_COL_4, learn_status);
-        contentValues.put(WORD_COL_5, folder_id);
-        contentValues.put(WORD_COL_6, last_notification_time);
+        contentValues.put(WORD_COL_7, folder_id);
+        long result = db.insert(TABLE_WORDS, null, contentValues);
+        if(result == -1)
+            return false;
+        else
+            return true;
+    }
+
+    public boolean insertNewWord(String word, String meaning, int lastTestSuccessful, String lastNotificationTime, int learnStatus, String folder_id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(WORD_COL_2, word);
+        contentValues.put(WORD_COL_3, meaning);
+        contentValues.put(WORD_COL_4, lastTestSuccessful);
+        contentValues.put(WORD_COL_5, lastNotificationTime);
+        contentValues.put(WORD_COL_6, learnStatus);
+        contentValues.put(WORD_COL_7, folder_id);
         long result = db.insert(TABLE_WORDS, null, contentValues);
         if(result == -1)
             return false;
@@ -169,10 +185,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
     }
 
-/*    public Cursor getWord(int folderId, int learnStatus, String time) {
+    public Cursor getWordsWithNoNotificationDate() {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery("select * from "+TABLE_WORDS + "where FOLDER_ID = " + folderId + "and LEARN_STATUS = " + learnStatus +
-                "and LAST_NOTIFICATION_TIME <" + time ,null);
+        String emptyString = null;
+        Cursor res = db.rawQuery("select * from "+ TABLE_WORDS + " where " + WORD_COL_5 + " is null",null);
         return res;
-    }*/
+    }
+
+    public Cursor getWordsWithMinNotificationDate() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select * from words_table where LAST_NOTIFICATION_TIME = (select min(LAST_NOTIFICATION_TIME) from words_table)",null);
+        return res;
+    }
+
+    public boolean updateWordLearnNotificationStatus(int wordId, int lastTestSuccessful, String lastNotificationTime, int learnStatus) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues res = new ContentValues();
+
+        res.put(WORD_COL_4,lastTestSuccessful);
+        res.put(WORD_COL_5 ,lastNotificationTime);
+        res.put(WORD_COL_6 ,learnStatus);
+
+        long result = db.update(TABLE_NOTIFICATION_SETTINGS, res, WORD_COL_1 + " = " + wordId, null);
+        if(result == -1)
+            return false;
+        else
+            return true;
+    }
+
 }
