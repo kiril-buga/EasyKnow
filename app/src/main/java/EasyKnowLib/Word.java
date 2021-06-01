@@ -28,6 +28,24 @@ public class Word {
         this.folderId = folderId;
     }
 
+    public boolean incrementlearnStatus() {
+        boolean incremented = false;
+        if (learnStatus < 5) {
+            learnStatus++;
+            incremented = true;
+        }
+        return incremented;
+    }
+
+    public boolean decrementLearnStatus() {
+        boolean decremented = false;
+        if (learnStatus > 0) {
+            learnStatus--;
+            decremented = true;
+        }
+        return decremented;
+    }
+
     public int getId() {
         return id;
     }
