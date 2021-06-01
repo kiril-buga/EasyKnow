@@ -57,7 +57,7 @@ public class NotificationsService extends IntentService {
             //messageNotificationStyleSender(getApplicationContext());
             if(intent.hasExtra("finished")){
                 finished = true;
-            } else{ finished = false;}
+            }
             messageNotificationStyle();
         }
 
@@ -125,6 +125,8 @@ public class NotificationsService extends IntentService {
     public void messageNotificationStyle(){
         String word = "random word"; //Get the next word to check from DB
         String meaning = "meaning"; //Get its meaning
+
+        finished = false;
 
         String sText = new String(String.valueOf(Html.fromHtml("Do you know what <b>" + word +"</b> means?")));
         Messages.add(sText );

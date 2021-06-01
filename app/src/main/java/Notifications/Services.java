@@ -26,6 +26,8 @@ import static com.example.myapplication.EasyKnow.CHANNEL_0_ID;
 
 public class Services extends Service {
 
+    DatabaseHelper myDB;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -35,6 +37,9 @@ public class Services extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         //return super.onStartCommand(intent, flags, startId);
         String input = intent.getStringExtra("inputExtra");
+
+        //Database
+        myDB = new DatabaseHelper(this);
 
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
