@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 import java.sql.Connection;
+import java.time.LocalDateTime;
 
 import EasyKnowLib.Day;
 import EasyKnowLib.Week;
@@ -198,15 +199,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return res;
     }
 
-    public boolean updateWordLearnNotificationStatus(int wordId, int lastTestSuccessful, String lastNotificationTime, int learnStatus) {
+    public boolean updateWord(int wordId, String lastNotificationTime, int learnStatus) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues res = new ContentValues();
 
-        res.put(WORD_COL_4,lastTestSuccessful);
         res.put(WORD_COL_5 ,lastNotificationTime);
         res.put(WORD_COL_6 ,learnStatus);
 
-        long result = db.update(TABLE_NOTIFICATION_SETTINGS, res, WORD_COL_1 + " = " + wordId, null);
+        long result = db.update(TABLE_WORDS, res, WORD_COL_1 + " = " + wordId, null);
         if(result == -1)
             return false;
         else
