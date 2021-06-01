@@ -1,7 +1,6 @@
 package com.example.myapplication;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
@@ -20,8 +19,13 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import EasyKnowLib.LearnFolder;
-import EasyKnowLib.TestDataGenerator;
+import EasyKnowLib.WordFinder;
 import Notifications.NotificationManagerActivity;
 import Notifications.NotificationReceiver;
 import Notifications.NotificationsService;
@@ -47,6 +51,7 @@ import static com.example.myapplication.EasyKnow.CHANNEL_1_ID;
 public class MainActivity extends AppCompatActivity {
 
     public DatabaseHelper myDB;
+    private WordFinder wordFinder;
     private ArrayList<LearnFolder> foldersList;
 
     private NotificationManagerCompat notificationManager;
@@ -57,17 +62,14 @@ public class MainActivity extends AppCompatActivity {
 
     private AddFolderActivity addFolderActivity;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Database
+        //Database and wordFinder
         myDB = new DatabaseHelper(this);
-
-/*        TestDataGenerator testDataGenerator = new TestDataGenerator();
-        testDataGenerator.createNewTestData(myDB);*/
+        wordFinder = new WordFinder();
 
         //Folders
         recyclerView = findViewById(R.id.recyclerView);
@@ -85,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
         btAdd.setOnClickListener((view)->{
             Intent intent = new Intent(MainActivity.this, AddFolderActivity.class);
             startActivity(intent);
-            Toast.makeText(this, "The button was clicked " , Toast.LENGTH_LONG).show();
         });
 
         //Assign variable
@@ -103,42 +104,20 @@ public class MainActivity extends AppCompatActivity {
             //@Override
             public void onClick(View v) {
 
-                String word = "random word"; //Get the next word to check from DB
 
-                Intent activityIntent = new Intent(getApplicationContext(), MainActivity.class);
-                PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(),
-                        0, activityIntent, 0);
-
-                Intent broadcastIntent = new Intent(getApplicationContext(), NotificationReceiver.class);
-                broadcastIntent.putExtra("toastMessage", "This is a message");
-                PendingIntent actionIntent = PendingIntent.getBroadcast(getApplicationContext(),
-                        0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                //Convert image type to bitmap
-                Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_foreground);
-
-                Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_1_ID)
-                        .setSmallIcon(R.drawable.ic_message)
-                        .setContentTitle("Notification")
-                        .setContentText("Do you know the meaning of "+ word + "?")
-                        .setPriority(NotificationCompat.PRIORITY_HIGH)
-                        .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                        .setColor(Color.BLUE)
-                        .setLargeIcon(icon)
-                        //.setStyle(new NotificationCompat.BigTextStyle()
-                        //    .bigText("This is a random long text. Bla Bla BlaThis is a random long text. Bla Bla BlaThis is a random long text. Bla Bla BlaThis is a random long text. Bla Bla BlaThis is a random long text. Bla Bla BlaThis is a random long text. Bla Bla BlaThis is a random long text. Bla Bla Bla")
-                        //.setBigContentTitle("Big Content Title")
-                        //.setSummaryText("Summary Text"))
-                        .setContentIntent(contentIntent)
-                        .setAutoCancel(true)
-                        .setOnlyAlertOnce(true)
-                        .addAction(R.mipmap.ic_launcher, "Yes", actionIntent)
-                        .addAction(R.mipmap.ic_launcher, "No", actionIntent)
-                        .build();
+                try {
+                    String word = wordFinder.getWord(myDB).getTitle(); //Get the next word to check from DB
+                    String meaning = wordFinder.getWord(myDB).getMeaning(); //Get its meaning
+                    if(!word.equals(null) && !meaning.equals(null)) {
+                        startService(v);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Please make sure you add enough words",Toast.LENGTH_SHORT ).show();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "Please make sure you add enough words",Toast.LENGTH_SHORT ).show();
+                }
 
 
-                notificationManager.notify(2, notification);
-                startService(v);
             }
         });
 
@@ -146,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Foreground service
     public void startService(View v) {
-        String input = "This is notification service";
+        String input = "This service is currently running";
 
         Intent serviceIntent = new Intent(this, Services.class);
         serviceIntent.putExtra("inputExtra", input);

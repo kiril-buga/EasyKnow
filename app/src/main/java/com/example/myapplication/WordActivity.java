@@ -55,7 +55,9 @@ public class WordActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        setWordInfo();
+        try {
+            setWordInfo();
+        } catch(Exception e){}
         setAdapter();
 
         //Controls

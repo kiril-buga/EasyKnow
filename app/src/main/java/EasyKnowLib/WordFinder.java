@@ -14,12 +14,12 @@ import java.util.ArrayList;
 public class WordFinder {
     private ArrayList<Word> words;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    //@RequiresApi(api = Build.VERSION_CODES.O)
     public WordFinder() {
         words = new ArrayList<>();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    //@RequiresApi(api = Build.VERSION_CODES.O)
     public Word getWord(DatabaseHelper myDB) {
         Word word = null;
         boolean wordFound = false;
@@ -58,7 +58,7 @@ public class WordFinder {
         return word;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    //@RequiresApi(api = Build.VERSION_CODES.O)
     public void loadWordsFromDB(Cursor res) {
         words.clear();
         LocalDateTime lastNotificationTime;
