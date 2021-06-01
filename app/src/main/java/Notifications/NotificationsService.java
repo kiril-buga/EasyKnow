@@ -133,6 +133,7 @@ public class NotificationsService extends IntentService {
         PendingIntent answerPendingIntent = PendingIntent.getBroadcast(context,
                 0, answerIntent,PendingIntent.FLAG_UPDATE_CURRENT);
 
+
         NotificationCompat.Action answerAction = new NotificationCompat.Action.Builder(
                 R.drawable.ic_baseline_done_24,
                 Html.fromHtml("<b>CHECK</b>"),
