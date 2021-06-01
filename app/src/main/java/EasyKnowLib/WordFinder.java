@@ -33,9 +33,9 @@ public class WordFinder {
 
         res = myDB.getWordsWithMinNotificationDate();
         loadWordsFromDB(res);
-        if (words.size() < 2) {
+        if (words.size() < 2 && words.size() > 0) {
             word = words.get(0);
-        } else {
+        } else if (words.size() >= 2) {
             word = words.get(0);
             int lowestLearnStatus = words.get(0).getLearnStatus();
 
