@@ -1,5 +1,7 @@
 package Notifications;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.*;
 
 import android.app.AlarmManager;
@@ -7,9 +9,11 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.IBinder;
 import android.renderscript.RenderScript;
 import android.widget.Toast;
@@ -20,6 +24,7 @@ import androidx.core.app.NotificationCompat;
 import com.example.myapplication.*;
 
 import EasyKnowLib.Day;
+import EasyKnowLib.NotificationSettings;
 import EasyKnowLib.Week;
 
 import static com.example.myapplication.EasyKnow.CHANNEL_0_ID;
@@ -69,8 +74,9 @@ public class Services extends Service {
     }
 
     private void setAlarm() {
-
-
+        NotificationSettings notificationSettings = getNotificationSettingsFromDB();
+        Week week = notificationSettings.getWeek();
+        LocalDate now;
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
@@ -81,13 +87,68 @@ public class Services extends Service {
         Intent intent = new Intent(getApplicationContext(), NotificationsService.class);
         PendingIntent pendingIntent = PendingIntent.getService(
                 getApplicationContext(),0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager AlarmManager = (AlarmManager) getSystemService(getApplicationContext().ALARM_SERVICE);
-        AlarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(getApplicationContext().ALARM_SERVICE);
+        /*AlarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);*/
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            now = LocalDate.now();
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (week.isMonday() == true && now.getDayOfWeek().equals(DayOfWeek.MONDAY)) {
+                    calendar.add(Calendar.SECOND, 1);
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+
+                } else if (week.isTuesday() == true && now.getDayOfWeek().equals(DayOfWeek.TUESDAY)) {
+                    calendar.add(Calendar.SECOND, 1);
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                } else if (week.isWednesday() == true && now.getDayOfWeek().equals(DayOfWeek.WEDNESDAY)) {
+                    calendar.add(Calendar.SECOND, 1);
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                } else if (week.isThursday() == true) {
+
+                } else if (week.isFriday() == true) {
+
+                } else if (week.isSaturday() == true) {
+
+                } else if (week.isSunday() == true) {
+
+                }
+            }
+        }
 
 //        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 //        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,  System.currentTimeMillis(),
 //                1000 * 60 * 60 * 24, pendingIntent);
 
+    }
+
+    public void setCalendarDates() {
+
+    }
+
+    public NotificationSettings getNotificationSettingsFromDB() {
+        NotificationSettings notificationSettings = new NotificationSettings();
+        Cursor res = myDB.getNotificationSettings();
+
+        while (res.moveToNext()) {
+            notificationSettings.setNotificationNumber(Integer.parseInt(res.getString(1)));
+            setDay(Day.MONDAY, Integer.parseInt((res.getString(2))), notificationSettings);
+            setDay(Day.TUESDAY, Integer.parseInt((res.getString(3))), notificationSettings);
+            setDay(Day.WEDNESDAY, Integer.parseInt((res.getString(4))), notificationSettings);
+            setDay(Day.THURSDAY, Integer.parseInt((res.getString(5))), notificationSettings);
+            setDay(Day.FRIDAY, Integer.parseInt((res.getString(6))), notificationSettings);
+            setDay(Day.SATURDAY, Integer.parseInt((res.getString(7))), notificationSettings);
+            setDay(Day.SUNDAY, Integer.parseInt((res.getString(8))), notificationSettings);
+        }
+        return notificationSettings;
+    }
+
+    private void setDay(Day day, int booleanAsInt, NotificationSettings notificationSettings) {
+        Week week = notificationSettings.getWeek();
+        if (booleanAsInt == 0) {
+            week.setDay(day, false);
+        } else {
+            week.setDay(day, true);
+        }
     }
 
 
