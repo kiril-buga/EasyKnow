@@ -3,6 +3,7 @@ package Notifications;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -74,46 +75,62 @@ public class Services extends Service {
     }
 
     private void setAlarm() {
-        NotificationSettings notificationSettings = getNotificationSettingsFromDB();
-        Week week = notificationSettings.getWeek();
-        LocalDate now;
+                NotificationSettings notificationSettings = getNotificationSettingsFromDB();
+                int numberOfNotifications = notificationSettings.getNotificationNumber();
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
+                for (int i = 0; i<numberOfNotifications; i++) {
+                    Week week = notificationSettings.getWeek();
+                    LocalDate now;
 
-        Toast.makeText(getApplicationContext(), calendar.getTime().toString(),Toast.LENGTH_LONG).show();
-        calendar.add(Calendar.SECOND, 2);
-        Toast.makeText(getApplicationContext(), calendar.getTime().toString(),Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(getApplicationContext(), NotificationsService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(
-                getApplicationContext(),0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(getApplicationContext().ALARM_SERVICE);
-        /*AlarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);*/
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            now = LocalDate.now();
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTimeInMillis(System.currentTimeMillis());
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                if (week.isMonday() == true && now.getDayOfWeek().equals(DayOfWeek.MONDAY)) {
-                    calendar.add(Calendar.SECOND, 1);
-                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                    Toast.makeText(getApplicationContext(), calendar.getTime().toString(), Toast.LENGTH_LONG).show();
+                    calendar.add(Calendar.SECOND, 2);
+                    Toast.makeText(getApplicationContext(), calendar.getTime().toString(), Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getApplicationContext(), NotificationsService.class);
+                    PendingIntent pendingIntent = PendingIntent.getService(
+                            getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    AlarmManager alarmManager = (AlarmManager) getSystemService(getApplicationContext().ALARM_SERVICE);
+                    /*AlarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);*/
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        now = LocalDate.now();
 
-                } else if (week.isTuesday() == true && now.getDayOfWeek().equals(DayOfWeek.TUESDAY)) {
-                    calendar.add(Calendar.SECOND, 1);
-                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                } else if (week.isWednesday() == true && now.getDayOfWeek().equals(DayOfWeek.WEDNESDAY)) {
-                    calendar.add(Calendar.SECOND, 1);
-                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                } else if (week.isThursday() == true) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            if (week.isMonday() == true && now.getDayOfWeek().equals(DayOfWeek.MONDAY)) {
+                                calendar.add(Calendar.SECOND, 1);
+                                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                            } else if (week.isTuesday() == true && now.getDayOfWeek().equals(DayOfWeek.TUESDAY)) {
+                                calendar.add(Calendar.SECOND, 1);
+                                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                            } else if (week.isWednesday() == true && now.getDayOfWeek().equals(DayOfWeek.WEDNESDAY)) {
+                                calendar.add(Calendar.SECOND, 1);
+                                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                            } else if (week.isThursday() == true && now.getDayOfWeek().equals(DayOfWeek.THURSDAY)) {
+                                calendar.add(Calendar.SECOND, 1);
+                                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                            } else if (week.isFriday() == true && now.getDayOfWeek().equals(DayOfWeek.FRIDAY)) {
+                                calendar.add(Calendar.SECOND, 1);
+                                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                            } else if (week.isSaturday() == true && now.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
+                                calendar.add(Calendar.SECOND, 1);
+                                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                            } else if (week.isSunday() == true && now.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+                                calendar.add(Calendar.SECOND, 1);
+                                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                            }
 
-                } else if (week.isFriday() == true) {
+                        }
+                    }
+                    try {
+                        TimeUnit.SECONDS.sleep(5);
+                    } catch (Exception e){
 
-                } else if (week.isSaturday() == true) {
-
-                } else if (week.isSunday() == true) {
-
+                    }
                 }
-            }
-        }
+
+
+
 
 //        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 //        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,  System.currentTimeMillis(),
