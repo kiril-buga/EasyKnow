@@ -6,12 +6,14 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.service.notification.NotificationListenerService;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -59,6 +61,8 @@ public class NotificationsService extends IntentService {
     static Word obWord;
 
 
+
+
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
 
@@ -70,12 +74,21 @@ public class NotificationsService extends IntentService {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
             //choiceNotificationStyle();
+//            NotificationSettings notificationSettings = getNotificationSettingsFromDB();
+//            int numberOfNotifications = notificationSettings.getNotificationNumber();
+
             Messages.clear();
 
             messageNotificationStyle();
         }
 
         //startService();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Services.notificationDestroyed = true;
     }
 
     //Foreground service
@@ -163,8 +176,8 @@ public class NotificationsService extends IntentService {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(2, notification);
-
     }
+
 
    public void messageNotificationStyle() {
         obWord = wordFinder.getWord(myDB);
@@ -315,4 +328,30 @@ public class NotificationsService extends IntentService {
         notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(2, notification);
     }
+
+    //for ID
+//    public NotificationSettings getNotificationSettingsFromDB() {
+//        NotificationSettings notificationSettings = new NotificationSettings();
+//        Cursor res = myDB.getNotificationSettings();
+//
+//        while (res.moveToNext()) {
+//            notificationSettings.setNotificationNumber(Integer.parseInt(res.getString(1)));
+//            setDay(Day.MONDAY, Integer.parseInt((res.getString(2))), notificationSettings);
+//            setDay(Day.TUESDAY, Integer.parseInt((res.getString(3))), notificationSettings);
+//            setDay(Day.WEDNESDAY, Integer.parseInt((res.getString(4))), notificationSettings);
+//            setDay(Day.THURSDAY, Integer.parseInt((res.getString(5))), notificationSettings);
+//            setDay(Day.FRIDAY, Integer.parseInt((res.getString(6))), notificationSettings);
+//            setDay(Day.SATURDAY, Integer.parseInt((res.getString(7))), notificationSettings);
+//            setDay(Day.SUNDAY, Integer.parseInt((res.getString(8))), notificationSettings);
+//        }
+//        return notificationSettings;
+//    }
+//    private void setDay(Day day, int booleanAsInt, NotificationSettings notificationSettings) {
+//        Week week = notificationSettings.getWeek();
+//        if (booleanAsInt == 0) {
+//            week.setDay(day, false);
+//        } else {
+//            week.setDay(day, true);
+//        }
+//    }
 }
