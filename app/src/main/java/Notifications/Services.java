@@ -35,7 +35,6 @@ public class Services extends Service {
 
     private DatabaseHelper myDB;
     static int currentNotificationNumber = 1;
-    static boolean notificationDestroyed;
 
     @Override
     public void onCreate() {
@@ -46,7 +45,7 @@ public class Services extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         //return super.onStartCommand(intent, flags, startId);
         String input = intent.getStringExtra("inputExtra");
-        notificationDestroyed = false;
+        //notificationDestroyed = false;
 
         //Database
         myDB = new DatabaseHelper(this);
@@ -154,9 +153,13 @@ public class Services extends Service {
 
 
     }
-    public void onNotificationRemoved (StatusBarNotification sbn){
+
+    static  void onNotificationRemoved (){
 
     }
+
+
+
 
     public NotificationSettings getNotificationSettingsFromDB() {
         NotificationSettings notificationSettings = new NotificationSettings();

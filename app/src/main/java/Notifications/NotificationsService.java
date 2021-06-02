@@ -88,7 +88,7 @@ public class NotificationsService extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Services.notificationDestroyed = true;
+        //Services.notificationDestroyed = true;
     }
 
     //Foreground service
