@@ -50,11 +50,13 @@ public class NotificationsService extends IntentService {
     static String userAnswer;
     static List<String> Messages = new ArrayList<>();
     static boolean finished;
-    private DatabaseHelper myDB;
+    static DatabaseHelper myDB;
     private WordFinder wordFinder;
 
     static String word;
     static String meaning;
+    static Word obWord;
+
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
@@ -92,33 +94,38 @@ public class NotificationsService extends IntentService {
         stopService(serviceIntent);
     }
 
+    public static void successfulAnswer(Context context){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            obWord.incrementlearnStatus();
+            myDB.updateWord(obWord.getId(), obWord.getLastNotificationTime().toString(), obWord.getLearnStatus());
+            messageNotificationStyleSender(context);
+        }
+    }
+    public static void wrongAnswer(Context context){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            obWord.incrementlearnStatus();
+            myDB.updateWord(obWord.getId(), obWord.getLastNotificationTime().toString(), obWord.getLearnStatus());
+            messageNotificationStyleSender(context);
+        }
+    }
 
+   public void messageNotificationStyle() {
+        obWord = wordFinder.getWord(myDB);
 
-    public void messageNotificationStyle(){
-
-
-        word = wordFinder.getWord(myDB).getTitle(); //Get the next word to check from DB
-        meaning = wordFinder.getWord(myDB).getMeaning(); //Get its meaning
+        word = obWord.getTitle(); //Get the next word to check from DB
+        meaning = obWord.getMeaning(); //Get its meaning
 
         finished = false;
 
         String sText = new String(String.valueOf(Html.fromHtml("Do you know what <b>" + word +"</b> means?")));
         Messages.add(sText );
         messageNotificationStyleSender(this);
-
-
-
-
-
     }
 
     public static void messageNotificationStyleSender(Context context) {
-
-
 //        Intent activityIntent = new Intent(this, MainActivity.class);
 //        PendingIntent contentIntent = PendingIntent.getActivity(this,
 //                0, activityIntent, 0);
-
 
         RemoteInput remoteInput = new RemoteInput.Builder("key_text_answer")
             .setLabel("Your answer...")
@@ -139,8 +146,6 @@ public class NotificationsService extends IntentService {
                 Html.fromHtml("<b>CHECK</b>"),
                 answerPendingIntent
         ).addRemoteInput(remoteInput).build();
-
-
 
         //Check if the user didn't write anything and clicked on NO button
         //Bundle results = RemoteInput.getResultsFromIntent(answerIntent);
