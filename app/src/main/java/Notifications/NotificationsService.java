@@ -30,6 +30,7 @@ import com.example.myapplication.*;
 import EasyKnowLib.*;
 
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,13 +98,18 @@ public class NotificationsService extends IntentService {
     public static void successfulAnswer(Context context){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             obWord.incrementlearnStatus();
+
+            obWord.setLastNotificationTime(LocalDateTime.now());
             myDB.updateWord(obWord.getId(), obWord.getLastNotificationTime().toString(), obWord.getLearnStatus());
             messageNotificationStyleSender(context);
         }
     }
     public static void wrongAnswer(Context context){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            obWord.incrementlearnStatus();
+            obWord.decrementLearnStatus();
+
+            obWord.setLastNotificationTime(LocalDateTime.now());
+
             myDB.updateWord(obWord.getId(), obWord.getLastNotificationTime().toString(), obWord.getLearnStatus());
             messageNotificationStyleSender(context);
         }

@@ -41,8 +41,12 @@ public class NotificationReceiver extends BroadcastReceiver {
             String reply;
             if(answerText.equals(meaning)){
                 reply = new String("Congratulations! " + answerText + " is the correct answer.");
+
+                NotificationsService.successfulAnswer(context);
             } else {
-                reply = new String("Sorry "+word+" means " + meaning+ ", try again");
+                reply = new String("Sorry "+word+" means " + meaning+ ", try next time");
+
+                NotificationsService.wrongAnswer(context);
             }
             intent = new Intent(context, NotificationsService.class);
             intent.putExtra("finished","true");
