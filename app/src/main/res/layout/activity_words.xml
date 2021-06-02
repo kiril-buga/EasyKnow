@@ -22,7 +22,7 @@
         android:clickable="true"
         android:focusable="true"
         android:tint="@color/white"
-        app:backgroundTint="#8BC34A"
+        app:backgroundTint="#0F51B5"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
