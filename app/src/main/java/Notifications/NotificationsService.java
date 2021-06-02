@@ -70,10 +70,8 @@ public class NotificationsService extends IntentService {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
             //choiceNotificationStyle();
-            //messageNotificationStyleSender(getApplicationContext());
-//            if(intent.hasExtra("finished")){
-//                finished = true;
-//            }
+            Messages.clear();
+
             messageNotificationStyle();
         }
 
@@ -101,7 +99,6 @@ public class NotificationsService extends IntentService {
 
             obWord.setLastNotificationTime(LocalDateTime.now());
             myDB.updateWord(obWord.getId(), obWord.getLastNotificationTime().toString(), obWord.getLearnStatus());
-            messageNotificationStyleSender(context);
         }
     }
     public static void wrongAnswer(Context context){
@@ -111,8 +108,62 @@ public class NotificationsService extends IntentService {
             obWord.setLastNotificationTime(LocalDateTime.now());
 
             myDB.updateWord(obWord.getId(), obWord.getLastNotificationTime().toString(), obWord.getLearnStatus());
-            messageNotificationStyleSender(context);
         }
+    }
+
+    public static void showResults(Context context){
+
+        RemoteInput remoteInput = new RemoteInput.Builder("key_text_answer")
+                .setLabel("Your answer...")
+                //.setChoices(new String[]{new String("No")})
+                //.addExtras(bundle)
+                .build();
+
+
+        Intent answerIntent = new Intent(context, NotificationReceiver.class);
+        answerIntent.putExtra("word",word);
+        answerIntent.putExtra("meaning",meaning);
+        PendingIntent answerPendingIntent = PendingIntent.getBroadcast(context,
+                0, answerIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        NotificationCompat.Action answerAction = new NotificationCompat.Action.Builder(
+                R.drawable.ic_baseline_done_24,
+                Html.fromHtml("<b>CHECK</b>"),
+                answerPendingIntent
+        ).addRemoteInput(remoteInput).build();
+
+        NotificationCompat.MessagingStyle messagingStyle =
+                new NotificationCompat.MessagingStyle("");
+
+        for(String message: Messages) {
+            NotificationCompat.MessagingStyle.Message notificationMessage =
+                    new NotificationCompat.MessagingStyle.Message(
+                            message,
+                            System.currentTimeMillis(),
+                            ""
+                    );
+            messagingStyle.addMessage(notificationMessage);
+        }
+
+        Notification notification = new NotificationCompat.Builder(context, CHANNEL_1_ID)
+                .setSmallIcon(R.drawable.ic_message)
+                .setCategory(NotificationCompat.CATEGORY_REMINDER)
+                .setShowWhen(false)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                //.setLargeIcon(icon)
+                .setStyle(messagingStyle)
+                //.addAction(answerAction)
+                .setColor(Color.BLUE)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
+                //.addAction(R.mipmap.ic_launcher, "NO", answerPendingIntent)
+                .setTimeoutAfter(10000)
+                .build();
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.notify(2, notification);
+
     }
 
    public void messageNotificationStyle() {
@@ -197,6 +248,12 @@ public class NotificationsService extends IntentService {
 //            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 //            notificationManager.notify(2, notification);
 //        }
+        Intent noReceive = new Intent(context, NotificationReceiver.class);
+        noReceive.putExtra("word",word);
+        noReceive.putExtra("meaning",meaning);
+        noReceive.setAction("NO_ACTION");
+        PendingIntent pendingIntentNo = PendingIntent.getBroadcast(context,
+                0, noReceive,PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification = new NotificationCompat.Builder(context, CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.ic_message)
@@ -209,7 +266,7 @@ public class NotificationsService extends IntentService {
                 .setColor(Color.BLUE)
                 .setAutoCancel(true)
                 .setOnlyAlertOnce(true)
-                .addAction(R.mipmap.ic_launcher, "NO", answerPendingIntent)
+                .addAction(R.mipmap.ic_launcher, "NO", pendingIntentNo)
                 .build();
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
@@ -253,7 +310,6 @@ public class NotificationsService extends IntentService {
                 .setOnlyAlertOnce(true)
                 .addAction(R.mipmap.ic_launcher, "YES", actionIntent)
                 .addAction(R.mipmap.ic_launcher, "NO", actionIntent)
-
                 .build();
 
         notificationManager = NotificationManagerCompat.from(this);

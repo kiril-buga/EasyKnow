@@ -27,6 +27,9 @@ public class NotificationReceiver extends BroadcastReceiver {
             String message = intent.getStringExtra("toastMessage");
             Toast.makeText(context, message, Toast.LENGTH_LONG).show();
         }
+        String meaning;
+        String word;
+        String action = intent.getAction();
 
         //Remote Input
         Bundle remoteInput = null;
@@ -35,8 +38,8 @@ public class NotificationReceiver extends BroadcastReceiver {
         }
         if(remoteInput != null && intent.hasExtra("word") && intent.hasExtra("meaning")) {
             CharSequence answerText = remoteInput.getCharSequence("key_text_answer");
-            String word = intent.getStringExtra("word");
-            String meaning = intent.getStringExtra("meaning");
+            word = intent.getStringExtra("word");
+            meaning = intent.getStringExtra("meaning");
             //Message answer = new Message(answerText, null);
             String reply;
             if(answerText.equals(meaning)){
@@ -52,11 +55,22 @@ public class NotificationReceiver extends BroadcastReceiver {
             intent.putExtra("finished","true");
             NotificationsService.Messages.add(reply);
             //Let's update the notification when received
-            NotificationsService.messageNotificationStyleSender(context);
+            NotificationsService.showResults(context);
 
+        } else if (action.equals("NO_ACTION") && intent.hasExtra("word") && intent.hasExtra("meaning")){
+            word = intent.getStringExtra("word");
+            meaning = intent.getStringExtra("meaning");
+            String reply = new String(word+" means " + meaning);
+            NotificationsService.wrongAnswer(context);
+
+            intent = new Intent(context, NotificationsService.class);
+            intent.putExtra("finished","true");
+            NotificationsService.Messages.add(reply);
+            //Let's update the notification when received
+            NotificationsService.showResults(context);
         }
 
-        //Toast.makeText(context, "Notification Receiver",Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Notification Receiver",Toast.LENGTH_LONG).show();
         //Intent intent1 = new Intent(context, NotificationsService.class);
         //context.startService(intent1);
     }
