@@ -22,9 +22,9 @@ public class NotificationTrigger extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         myDB = new DatabaseHelper(context);
-
-//        NotificationsService.notificationID = 2;
-//        NotificationsService.requestCode = 0;
+        NotificationsService.currentNumberOfNotifications = 0;
+//      NotificationsService.notificationID = 2;
+//      NotificationsService.requestCode = 0;
         notificationSettings = getNotificationSettingsFromDB();
         numberOfNotifications = notificationSettings.getNotificationNumber();
 
@@ -49,6 +49,7 @@ public class NotificationTrigger extends BroadcastReceiver {
                 setIntentNotification(context);
             }
         }
+
 
     }
 

@@ -2,30 +2,22 @@ package com.example.myapplication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.StyleSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,17 +30,12 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import EasyKnowLib.LearnFolder;
-import EasyKnowLib.TestDataGenerator;
 import EasyKnowLib.WordFinder;
 import Notifications.NotificationManagerActivity;
-import Notifications.NotificationReceiver;
-import Notifications.NotificationsService;
+import Notifications.NotificationTrigger;
 import Notifications.Services;
-
-import static com.example.myapplication.EasyKnow.CHANNEL_1_ID;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -59,10 +46,19 @@ public class MainActivity extends AppCompatActivity {
 
     private NotificationManagerCompat notificationManager;
     private Button btShow;
-    private Switch swShowNotificationsNow;
+    private Switch swShowNotifications;
+
     private FloatingActionButton btAdd;
     private RecyclerView recyclerView;
     private FoldersAdapter.RecyclerViewClickListener listener;
+
+    private static String MY_PREFS = "switch_prefs"; //shared preferences name
+    private static String SWITCH_STATUS = "switch_status";
+
+    boolean switch_status;
+
+    SharedPreferences myPreferences;
+    SharedPreferences.Editor myEditor;
 
     private AddFolderActivity addFolderActivity;
 
@@ -101,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Assign variable
         btShow = findViewById(R.id.bt_show);
+        swShowNotifications = findViewById(R.id.switchShowNotifications);
+
 
         // Toolbar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.mainActivityToolbar);
@@ -109,6 +107,14 @@ public class MainActivity extends AppCompatActivity {
 
         //Notifications
         notificationManager = NotificationManagerCompat.from(this);
+
+        //Shared Preferences
+        myPreferences = getSharedPreferences(MY_PREFS, MODE_PRIVATE);
+        myEditor = getSharedPreferences(MY_PREFS,MODE_PRIVATE).edit();
+
+        switch_status = myPreferences.getBoolean(SWITCH_STATUS, false); //false is default value
+        swShowNotifications.setChecked(switch_status);
+
 
         btShow.setOnClickListener(new View.OnClickListener() {
             //@Override
@@ -128,8 +134,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 //Toast.makeText(getApplicationContext(), calendar.getTime().toString(), Toast.LENGTH_LONG).show();
-
-
 //                Intent intent = new Intent(getApplicationContext(), NotificationsService.class);
 //                NotificationsService.enqueueWork(getApplicationContext(), intent);
 //
@@ -162,25 +166,43 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    private void showNotification(CompoundButton compoundButton, boolean b) {
-        if (b == true) {
-            try {
-                String word = wordFinder.getWord(myDB).getTitle(); //Get the next word to check from DB
-                String meaning = wordFinder.getWord(myDB).getMeaning(); //Get its meaning
-                if(!word.equals(null) && !meaning.equals(null)) {
-                    startService(v);
+        swShowNotifications.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                View v = findViewById(android.R.id.content).getRootView();
+                if (isChecked == true) {
+                    try {
+                        String word = wordFinder.getWord(myDB).getTitle(); //Get the next word to check from DB
+                        String meaning = wordFinder.getWord(myDB).getMeaning(); //Get its meaning
+                        if(!word.equals(null) && !meaning.equals(null)) {
+                            startService(v);
+                            myEditor.putBoolean(SWITCH_STATUS,true); //set switch button to true
+                            myEditor.apply(); // apply
+                            swShowNotifications.setChecked(true);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Please make sure you add enough words",Toast.LENGTH_SHORT ).show();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(getApplicationContext(), "Please make sure you add enough words",Toast.LENGTH_SHORT ).show();
+                    }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Please make sure you add enough words",Toast.LENGTH_SHORT ).show();
-                }
-            } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), "Please make sure you add enough words",Toast.LENGTH_SHORT ).show();
-            }
-        } else {
+                    stopService(v);
+                    AlarmManager alarms = (AlarmManager) getApplicationContext().getSystemService(getApplicationContext().ALARM_SERVICE);
+                    Intent intent = new Intent(getApplicationContext(), NotificationTrigger.class);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                            getApplicationContext(), 1000, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    alarms.cancel(pendingIntent);
 
-        }
+                    myEditor.putBoolean(SWITCH_STATUS,false); //set switch button to false
+                    myEditor.apply(); // apply
+                    swShowNotifications.setChecked(false);
+
+                }
+            }
+        });
+
     }
+
 
 
     //Foreground service

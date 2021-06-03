@@ -136,7 +136,8 @@ public class NotificationManagerActivity extends AppCompatActivity implements Ad
     private void setNotificationInfo() {
         if(userSettingsExistence == false){
             // show message
-            showMessage("Set your Notifications Perferences!", "Here, you can tell the app at which days in the week and how many times you want to be notified. At the moment, all notifications are disabled.");
+            showMessage("Set your Notifications Preferences!",
+                    "Here, you can set days of the week and how many times you want to be notified per day.");
             return;
         } else {
             Week week = notificationSettings.getWeek();

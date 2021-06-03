@@ -13,7 +13,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.service.notification.StatusBarNotification;
 import android.text.Html;
 import android.util.Log;
 import android.widget.Toast;
@@ -88,6 +87,7 @@ public class NotificationsService extends JobIntentService {
     public void onCreate() {
         super.onCreate();
         Intent intent = new Intent(this, NotificationsService.class);
+        //currentNumberOfNotifications = 0;
         //enqueueWork(getApplicationContext(), intent);
 
         Toast.makeText(getApplicationContext(), "Started", Toast.LENGTH_LONG);
@@ -264,7 +264,7 @@ public class NotificationsService extends JobIntentService {
                 public void run() {
 
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(2000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

@@ -111,7 +111,7 @@ public class Services extends Service {
         AlarmManager alarmManager = (AlarmManager) getSystemService(getApplicationContext().ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
         calendar.add(Calendar.SECOND, 1);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),1000, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),10000, pendingIntent);
     }
 
 
