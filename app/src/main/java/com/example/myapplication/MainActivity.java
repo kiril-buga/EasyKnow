@@ -239,8 +239,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.item_edit:
-                return true;
             case R.id.item_notifications:
                 Intent intent = new Intent(MainActivity.this, NotificationManagerActivity.class );
                 startActivity(intent);
