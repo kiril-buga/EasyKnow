@@ -31,6 +31,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
     private NotificationManagerCompat notificationManager;
     private Button btShow;
+    private Switch swShowNotificationsNow;
     private FloatingActionButton btAdd;
     private RecyclerView recyclerView;
     private FoldersAdapter.RecyclerViewClickListener listener;
@@ -122,6 +125,25 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    private void showNotification(CompoundButton compoundButton, boolean b) {
+        if (b == true) {
+            try {
+                String word = wordFinder.getWord(myDB).getTitle(); //Get the next word to check from DB
+                String meaning = wordFinder.getWord(myDB).getMeaning(); //Get its meaning
+                if(!word.equals(null) && !meaning.equals(null)) {
+                    startService(v);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please make sure you add enough words",Toast.LENGTH_SHORT ).show();
+                }
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), "Please make sure you add enough words",Toast.LENGTH_SHORT ).show();
+            }
+        } else {
+
+        }
+    }
+
 
     //Foreground service
     public void startService(View v) {
