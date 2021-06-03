@@ -62,8 +62,9 @@ public class NotificationsService extends JobIntentService {
     static boolean finished;
     static DatabaseHelper myDB;
     private WordFinder wordFinder;
-    private static int notificationID = 2;
-    private static int requestCode = 0;
+    static int notificationID = 2;
+    static int requestCode = 0;
+    static int currentNumberOfNotifications = 0;
 
     static String word;
     static String meaning;
@@ -71,7 +72,7 @@ public class NotificationsService extends JobIntentService {
 
 //    static NotificationSettings notificationSettings = getNotificationSettingsFromDB();
 //    static int numberOfNotifications = notificationSettings.getNotificationNumber();
-    static int currentNumberOfNotifications = 0;
+
 
     private static final String TAG = "MyJobIntentService";
     /**
@@ -105,7 +106,6 @@ public class NotificationsService extends JobIntentService {
 //            Messages.clear();
 //
 //            messageNotificationStyle();
-//
 //        }
     }
 
