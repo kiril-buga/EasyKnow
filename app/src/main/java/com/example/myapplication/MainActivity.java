@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import EasyKnowLib.LearnFolder;
+import EasyKnowLib.TestDataGenerator;
 import EasyKnowLib.WordFinder;
 import Notifications.NotificationManagerActivity;
 import Notifications.NotificationReceiver;
@@ -70,6 +71,12 @@ public class MainActivity extends AppCompatActivity {
         //Database and wordFinder
         myDB = new DatabaseHelper(this);
         wordFinder = new WordFinder();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+            //TestDataGenerator testDataGenerator = new TestDataGenerator();
+            //testDataGenerator.createNewTestData(myDB);
+
+        }
 
         //Folders
         recyclerView = findViewById(R.id.recyclerView);
@@ -116,6 +123,37 @@ public class MainActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     Toast.makeText(getApplicationContext(), "Please make sure you add enough words",Toast.LENGTH_SHORT ).show();
                 }
+
+                //Toast.makeText(getApplicationContext(), calendar.getTime().toString(), Toast.LENGTH_LONG).show();
+
+
+//                Intent intent = new Intent(getApplicationContext(), NotificationsService.class);
+//                NotificationsService.enqueueWork(getApplicationContext(), intent);
+//
+//                PendingIntent pendingIntent = PendingIntent.getService(
+//                        getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.setTimeInMillis(System.currentTimeMillis());
+//                //Toast.makeText(getApplicationContext(), calendar.getTime().toString(), Toast.LENGTH_LONG).show();
+//                calendar.add(Calendar.SECOND, 1);
+
+//                AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(getApplicationContext().ALARM_SERVICE);
+//                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+
+//
+//
+//                PendingIntent pendingIntent2 = PendingIntent.getService(
+//                        getApplicationContext(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//                Calendar calendar2 = Calendar.getInstance();
+//                calendar.setTimeInMillis(System.currentTimeMillis());
+//                //Toast.makeText(getApplicationContext(), calendar.getTime().toString(), Toast.LENGTH_LONG).show();
+//                calendar.add(Calendar.SECOND, 2);
+//
+//                //AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(getApplicationContext().ALARM_SERVICE);
+//                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent2);
 
 
             }
