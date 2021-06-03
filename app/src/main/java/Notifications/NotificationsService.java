@@ -1,7 +1,7 @@
 package Notifications;
 
-import android.app.Activity;
-import android.app.IntentService;
+import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -10,43 +10,50 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Build;
-import android.os.Bundle;
-import android.service.notification.NotificationListenerService;
+import android.os.Handler;
+import android.os.SystemClock;
+import android.service.notification.StatusBarNotification;
 import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.StyleSpan;
-import android.view.View;
+import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
+import androidx.annotation.NonNull;
+import androidx.core.app.JobIntentService;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.app.RemoteInput;
+import androidx.core.content.ContextCompat;
 
-import com.example.myapplication.*;
-import EasyKnowLib.*;
-
+import com.example.myapplication.AddWordActivity;
+import com.example.myapplication.DatabaseHelper;
+import com.example.myapplication.MainActivity;
+import com.example.myapplication.R;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+
+import EasyKnowLib.Day;
+import EasyKnowLib.NotificationSettings;
+import EasyKnowLib.Week;
+import EasyKnowLib.Word;
+import EasyKnowLib.WordFinder;
 
 import static com.example.myapplication.EasyKnow.CHANNEL_1_ID;
 
 
+@SuppressLint("OverrideAbstract")
+public class NotificationsService extends JobIntentService {
 
-public class NotificationsService extends IntentService {
+
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      *
      */
     public NotificationsService() {
-        super("My new Intent Service");
+        super();
     }
 
     private NotificationManagerCompat notificationManager;
@@ -55,41 +62,90 @@ public class NotificationsService extends IntentService {
     static boolean finished;
     static DatabaseHelper myDB;
     private WordFinder wordFinder;
+    static int notificationID = 2;
+    static int requestCode = 0;
+    static int currentNumberOfNotifications = 0;
 
     static String word;
     static String meaning;
     static Word obWord;
 
+//    static NotificationSettings notificationSettings = getNotificationSettingsFromDB();
+//    static int numberOfNotifications = notificationSettings.getNotificationNumber();
 
 
+    private static final String TAG = "MyJobIntentService";
+    /**
+     * Unique job ID for this service.
+     */
+    private static final int JOB_ID = 2;
+
+    public static void enqueueWork(Context context, Intent intent) {
+        enqueueWork(context, NotificationsService.class, JOB_ID, intent);
+    }
 
     @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
+    public void onCreate() {
+        super.onCreate();
+        Intent intent = new Intent(this, NotificationsService.class);
+        //enqueueWork(getApplicationContext(), intent);
 
-        //Database
+        Toast.makeText(getApplicationContext(), "Started", Toast.LENGTH_LONG);
+//        showToast("Job Execution Started");
+//
+//        myDB = new DatabaseHelper(this);
+//
+//        wordFinder = new WordFinder();
+//
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+//            //choiceNotificationStyle();
+//            //            NotificationSettings notificationSettings = getNotificationSettingsFromDB();
+//            //            int numberOfNotifications = notificationSettings.getNotificationNumber();
+//
+//            Messages.clear();
+//
+//            messageNotificationStyle();
+//        }
+    }
+
+    void showToast(final CharSequence text) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(NotificationsService.this, text, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    protected void onHandleWork(@NonNull Intent intent) {
+
+//      Database
         myDB = new DatabaseHelper(this);
-
         wordFinder = new WordFinder();
-
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
             //choiceNotificationStyle();
-//            NotificationSettings notificationSettings = getNotificationSettingsFromDB();
-//            int numberOfNotifications = notificationSettings.getNotificationNumber();
-
+            //            NotificationSettings notificationSettings = getNotificationSettingsFromDB();
+            //            int numberOfNotifications = notificationSettings.getNotificationNumber();
             Messages.clear();
-
             messageNotificationStyle();
-        }
 
+            stopSelf();
+        }
         //startService();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //Services.notificationDestroyed = true;
+        showToast("Job Execution Finished");
     }
+
+    @SuppressWarnings("deprecation")
+    final Handler mHandler = new Handler();
+
+
 
     //Foreground service
     public void startService() {
@@ -168,16 +224,61 @@ public class NotificationsService extends IntentService {
                 .setStyle(messagingStyle)
                 //.addAction(answerAction)
                 .setColor(Color.BLUE)
-                .setAutoCancel(true)
+                .setAutoCancel(false)
                 .setOnlyAlertOnce(true)
                 //.addAction(R.mipmap.ic_launcher, "NO", answerPendingIntent)
-                .setTimeoutAfter(10000)
+                .setTimeoutAfter(5000)
                 .build();
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(2, notification);
-    }
+        notificationManager.notify(notificationID, notification);
 
+
+//let's call another notification
+
+
+        Handler mainHandler = new Handler(context.getMainLooper());
+        notificationID++;
+        requestCode++;
+        currentNumberOfNotifications++; 
+        if(NotificationTrigger.numberOfNotifications>currentNumberOfNotifications) {
+
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(System.currentTimeMillis());
+
+            //Toast.makeText(getApplicationContext(), calendar.getTime().toString(), Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), calendar.getTime().toString(), Toast.LENGTH_LONG).show();
+
+
+//            PendingIntent pendingIntent = PendingIntent.getService(
+//                    context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            //AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
+            //calendar.add(Calendar.SECOND, 1);
+            //alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+
+            //context.startService(intent);
+
+            Runnable myRunnable = new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Intent intent = new Intent(context, NotificationTrigger.class);
+                    NotificationsService.enqueueWork(context, intent);
+
+
+
+
+                } // This is your code
+            };
+            mainHandler.post(myRunnable);
+        }
+    }
 
    public void messageNotificationStyle() {
         obWord = wordFinder.getWord(myDB);
@@ -185,7 +286,7 @@ public class NotificationsService extends IntentService {
         word = obWord.getTitle(); //Get the next word to check from DB
         meaning = obWord.getMeaning(); //Get its meaning
 
-        finished = false;
+        //finished = false;
 
         String sText = new String(String.valueOf(Html.fromHtml("Do you know what <b>" + word +"</b> means?")));
         Messages.add(sText );
@@ -259,7 +360,7 @@ public class NotificationsService extends IntentService {
 //                    .build();
 //
 //            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-//            notificationManager.notify(2, notification);
+//            notificationManager.notify(notificationID, notification);
 //        }
         Intent noReceive = new Intent(context, NotificationReceiver.class);
         noReceive.putExtra("word",word);
@@ -277,19 +378,18 @@ public class NotificationsService extends IntentService {
                 .setStyle(messagingStyle)
                 .addAction(answerAction)
                 .setColor(Color.BLUE)
-                .setAutoCancel(true)
+                .setAutoCancel(false)
                 .setOnlyAlertOnce(true)
                 .addAction(R.mipmap.ic_launcher, "NO", pendingIntentNo)
                 .build();
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(2, notification);
+        notificationManager.notify(notificationID, notification);
 
     }
 
     public void choiceNotificationStyle() {
         String word = "random word"; //Get the next word to check from DB
-
         String meaning = "meaning"; //Get its meaning
 
         Intent activityIntent = new Intent(getApplicationContext(), MainActivity.class);
@@ -326,11 +426,11 @@ public class NotificationsService extends IntentService {
                 .build();
 
         notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(2, notification);
+        notificationManager.notify(notificationID, notification);
     }
 
     //for ID
-//    public NotificationSettings getNotificationSettingsFromDB() {
+//    public static NotificationSettings getNotificationSettingsFromDB() {
 //        NotificationSettings notificationSettings = new NotificationSettings();
 //        Cursor res = myDB.getNotificationSettings();
 //
@@ -346,7 +446,7 @@ public class NotificationsService extends IntentService {
 //        }
 //        return notificationSettings;
 //    }
-//    private void setDay(Day day, int booleanAsInt, NotificationSettings notificationSettings) {
+//    private static void setDay(Day day, int booleanAsInt, NotificationSettings notificationSettings) {
 //        Week week = notificationSettings.getWeek();
 //        if (booleanAsInt == 0) {
 //            week.setDay(day, false);

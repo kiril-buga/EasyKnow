@@ -34,7 +34,11 @@ import static com.example.myapplication.EasyKnow.CHANNEL_0_ID;
 public class Services extends Service {
 
     private DatabaseHelper myDB;
-    static int currentNotificationNumber = 1;
+    static volatile int currentNotificationNumber = 0;
+
+    static volatile int notificationID;
+    private int numberOfNotifications;
+
 
     @Override
     public void onCreate() {
@@ -45,8 +49,6 @@ public class Services extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         //return super.onStartCommand(intent, flags, startId);
         String input = intent.getStringExtra("inputExtra");
-        //notificationDestroyed = false;
-
         //Database
         myDB = new DatabaseHelper(this);
 
@@ -72,82 +74,56 @@ public class Services extends Service {
 
         //do heavy work on a background thread
         //stopSelf();
-        setAlarm();
+        notificationID = 2;
+        NotificationSettings notificationSettings = getNotificationSettingsFromDB();
+        int numberOfNotifications = notificationSettings.getNotificationNumber();
+
+//        alarmRunnable runnable = new alarmRunnable();
+//        new Thread(runnable).start();
+
+        fireAlarm();
 
         return START_NOT_STICKY; //START_REDELIVER_INTENT
     }
 
-    private void setAlarm() {
+    private void fireAlarm() {
+        NotificationSettings notificationSettings = getNotificationSettingsFromDB();
+        numberOfNotifications = notificationSettings.getNotificationNumber();
 
-        alarmRunnable runnable = new alarmRunnable();
-        new Thread(runnable).start();
-
-
+        //Toast.makeText(getApplicationContext(), calendar.getTime().toString(), Toast.LENGTH_LONG).show();
+        setAlarm();
+        /*AlarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);*/
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//        }
 //        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 //        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,  System.currentTimeMillis(),
 //                1000 * 60 * 60 * 24, pendingIntent);
 
     }
 
+    private void setAlarm(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        Intent intent = new Intent(getApplicationContext(), NotificationTrigger.class);
+        //NotificationsService.enqueueWork(getApplicationContext(), intent);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                getApplicationContext(), 1000, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(getApplicationContext().ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
+        calendar.add(Calendar.SECOND, 1);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),1000, pendingIntent);
+    }
+
+
     class alarmRunnable implements Runnable {
-
-
         @Override
         public void run() {
-            NotificationSettings notificationSettings = getNotificationSettingsFromDB();
-            int numberOfNotifications = notificationSettings.getNotificationNumber();
 
-            for (int i = 0; i<numberOfNotifications; i++) {
-
-                Week week = notificationSettings.getWeek();
-                LocalDate now;
-
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(System.currentTimeMillis());
-
-                //Toast.makeText(getApplicationContext(), calendar.getTime().toString(), Toast.LENGTH_LONG).show();
-                calendar.add(Calendar.SECOND, 2);
-                //Toast.makeText(getApplicationContext(), calendar.getTime().toString(), Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(getApplicationContext(), NotificationsService.class);
-                PendingIntent pendingIntent = PendingIntent.getService(
-                        getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                AlarmManager alarmManager = (AlarmManager) getSystemService(getApplicationContext().ALARM_SERVICE);
-                /*AlarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);*/
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    now = LocalDate.now();
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        if (week.isMonday() == true && now.getDayOfWeek().equals(DayOfWeek.MONDAY)) {
-                            calendar.add(Calendar.SECOND, 1);
-                            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                        } else if (week.isTuesday() == true && now.getDayOfWeek().equals(DayOfWeek.TUESDAY)) {
-                            calendar.add(Calendar.SECOND, 1);
-                            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                        } else if (week.isWednesday() == true && now.getDayOfWeek().equals(DayOfWeek.WEDNESDAY)) {
-                            calendar.add(Calendar.SECOND, 1);
-                            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                        } else if (week.isThursday() == true && now.getDayOfWeek().equals(DayOfWeek.THURSDAY)) {
-                            calendar.add(Calendar.SECOND, 1);
-                            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                        } else if (week.isFriday() == true && now.getDayOfWeek().equals(DayOfWeek.FRIDAY)) {
-                            calendar.add(Calendar.SECOND, 1);
-                            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                        } else if (week.isSaturday() == true && now.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
-                            calendar.add(Calendar.SECOND, 1);
-                            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                        } else if (week.isSunday() == true && now.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
-                            calendar.add(Calendar.SECOND, 1);
-                            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                        }
-
-                    }
-                }
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
+            setAlarm();
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
 
@@ -157,9 +133,6 @@ public class Services extends Service {
     static  void onNotificationRemoved (){
 
     }
-
-
-
 
     public NotificationSettings getNotificationSettingsFromDB() {
         NotificationSettings notificationSettings = new NotificationSettings();

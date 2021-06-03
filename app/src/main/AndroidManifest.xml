@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.myapplication">
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"></uses-permission>
+    <uses-permission android:name="android.permission.WAKE_LOCK"></uses-permission>
+    <uses-permission android:name="android.permission.SET_ALARM"></uses-permission>
     <application
         android:name=".EasyKnow"
         android:allowBackup="true"
@@ -23,9 +25,11 @@
             </intent-filter>
         </activity>
         <receiver android:name="Notifications.NotificationReceiver"/>
-        <service android:name="Notifications.Services"/>
+        <receiver android:name="Notifications.NotificationTrigger"/>
+            <service android:name="Notifications.Services"/>
         <service android:name="Notifications.NotificationsService"
-            android:exported="false"/>
+        android:permission="android.permission.BIND_JOB_SERVICE" />
+
     </application>
 
 </manifest>

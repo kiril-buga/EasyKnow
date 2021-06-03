@@ -27,7 +27,7 @@ public class EasyKnow extends Application {
             NotificationChannel channel1 = new NotificationChannel(
                     CHANNEL_1_ID,
                     "Check answer",
-                    NotificationManager.IMPORTANCE_LOW
+                    NotificationManager.IMPORTANCE_HIGH
             );
             channel1.setDescription("This channel checks your answers");
 
