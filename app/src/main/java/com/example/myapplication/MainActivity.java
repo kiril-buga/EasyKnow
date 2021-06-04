@@ -35,6 +35,7 @@ import EasyKnowLib.LearnFolder;
 import EasyKnowLib.WordFinder;
 import Notifications.NotificationManagerActivity;
 import Notifications.NotificationTrigger;
+import Notifications.NotificationsService;
 import Notifications.Services;
 
 
@@ -187,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 } else {
                     stopService(v);
+
                     AlarmManager alarms = (AlarmManager) getApplicationContext().getSystemService(getApplicationContext().ALARM_SERVICE);
                     Intent intent = new Intent(getApplicationContext(), NotificationTrigger.class);
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(
