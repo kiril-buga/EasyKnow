@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<LearnFolder> foldersList;
 
     private NotificationManagerCompat notificationManager;
-    private Button btShow;
+//    private Button btShow;
     private Switch swShowNotifications;
 
     private FloatingActionButton btAdd;
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Assign variable
-        btShow = findViewById(R.id.bt_show);
+        //btShow = findViewById(R.id.bt_show);
         swShowNotifications = findViewById(R.id.switchShowNotifications);
 
 
@@ -117,22 +117,22 @@ public class MainActivity extends AppCompatActivity {
         swShowNotifications.setChecked(switch_status);
 
 
-        btShow.setOnClickListener(new View.OnClickListener() {
-            //@Override
-            public void onClick(View v) {
-
-
-                try {
-                    String word = wordFinder.getWord(myDB).getTitle(); //Get the next word to check from DB
-                    String meaning = wordFinder.getWord(myDB).getMeaning(); //Get its meaning
-                    if(!word.equals(null) && !meaning.equals(null)) {
-                        startService(v);
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Please make sure you add enough words",Toast.LENGTH_SHORT ).show();
-                    }
-                } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), "Please make sure you add enough words",Toast.LENGTH_SHORT ).show();
-                }
+//        btShow.setOnClickListener(new View.OnClickListener() {
+//            //@Override
+//            public void onClick(View v) {
+//
+//
+//                try {
+//                    String word = wordFinder.getWord(myDB).getTitle(); //Get the next word to check from DB
+//                    String meaning = wordFinder.getWord(myDB).getMeaning(); //Get its meaning
+//                    if(!word.equals(null) && !meaning.equals(null)) {
+//                        startService(v);
+//                    } else {
+//                        Toast.makeText(getApplicationContext(), "Please make sure you add enough words",Toast.LENGTH_SHORT ).show();
+//                    }
+//                } catch (Exception e) {
+//                    Toast.makeText(getApplicationContext(), "Please make sure you add enough words",Toast.LENGTH_SHORT ).show();
+//                }
 
                 //Toast.makeText(getApplicationContext(), calendar.getTime().toString(), Toast.LENGTH_LONG).show();
 //                Intent intent = new Intent(getApplicationContext(), NotificationsService.class);
@@ -164,8 +164,8 @@ public class MainActivity extends AppCompatActivity {
 //                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent2);
 
 
-            }
-        });
+//            }
+//        });
 
         swShowNotifications.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
             @Override

@@ -110,7 +110,7 @@ public class Services extends Service {
                 getApplicationContext(), 1000, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(getApplicationContext().ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
-        calendar.add(Calendar.SECOND, 1);
+        //calendar.add(Calendar.SECOND, 1);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),10000, pendingIntent);
     }
 
@@ -130,9 +130,6 @@ public class Services extends Service {
 
     }
 
-    static  void onNotificationRemoved (){
-
-    }
 
     public NotificationSettings getNotificationSettingsFromDB() {
         NotificationSettings notificationSettings = new NotificationSettings();

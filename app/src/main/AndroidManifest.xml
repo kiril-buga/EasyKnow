@@ -26,7 +26,7 @@
         </activity>
         <receiver android:name="Notifications.NotificationReceiver"/>
         <receiver android:name="Notifications.NotificationTrigger"/>
-            <service android:name="Notifications.Services"/>
+        <service android:name="Notifications.Services"/>
         <service android:name="Notifications.NotificationsService"
         android:permission="android.permission.BIND_JOB_SERVICE" />
 
