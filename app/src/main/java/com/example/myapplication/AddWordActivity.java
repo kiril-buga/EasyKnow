@@ -37,14 +37,16 @@ public class AddWordActivity extends AppCompatActivity {
 
         myDB = new DatabaseHelper(this);
 
+        if (getIntent().hasExtra("folderTitle")) {
+            folderTitle = getIntent().getStringExtra("folderTitle");
+        }
+
         btnSaveWord.setOnClickListener((view)->{
             // save to a file
             saveWord();
         });
 
-        btnSaveWordCancel.setOnClickListener((view)->{
-            goToWordActivity();
-        });
+        btnSaveWordCancel.setOnClickListener((view)-> goToWordActivity());
     }
 
     public void saveWord(){
@@ -57,9 +59,8 @@ public class AddWordActivity extends AppCompatActivity {
         if(sWord.isEmpty() || sMeaning.isEmpty()){
             editTextWord.setError("Word and Meaning are required");
             editTextWord.requestFocus();
-            return;
-        }
-        else {
+            
+        } else {
 
             // GetData from recycler view
             if (getIntent().hasExtra("folderTitle")) {
@@ -79,8 +80,6 @@ public class AddWordActivity extends AppCompatActivity {
                     goToWordActivity();
                 }
             }
-
-
         }
     }
 
