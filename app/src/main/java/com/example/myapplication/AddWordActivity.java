@@ -59,7 +59,7 @@ public class AddWordActivity extends AppCompatActivity {
         if(sWord.isEmpty() || sMeaning.isEmpty()){
             editTextWord.setError("Word and Meaning are required");
             editTextWord.requestFocus();
-            
+
         } else {
 
             // GetData from recycler view
