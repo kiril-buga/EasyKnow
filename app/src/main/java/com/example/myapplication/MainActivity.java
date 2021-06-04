@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
@@ -17,6 +18,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,6 +41,7 @@ import Notifications.NotificationsService;
 import Notifications.Services;
 
 
+@SuppressLint("UseSwitchCompatOrMaterialCode")
 public class MainActivity extends AppCompatActivity {
 
     public DatabaseHelper myDB;
@@ -168,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
         swShowNotifications.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 View v = findViewById(android.R.id.content).getRootView();
@@ -182,6 +186,10 @@ public class MainActivity extends AppCompatActivity {
                             swShowNotifications.setChecked(true);
                         } else {
                             Toast.makeText(getApplicationContext(), "Please make sure you add enough words",Toast.LENGTH_SHORT ).show();
+                            
+                            myEditor.putBoolean(SWITCH_STATUS,false); //set switch button to false
+                            myEditor.apply(); // apply
+                            swShowNotifications.setChecked(false);
                         }
                     } catch (Exception e) {
                         Toast.makeText(getApplicationContext(), "Please make sure you add enough words",Toast.LENGTH_SHORT ).show();
@@ -198,7 +206,6 @@ public class MainActivity extends AppCompatActivity {
                     myEditor.putBoolean(SWITCH_STATUS,false); //set switch button to false
                     myEditor.apply(); // apply
                     swShowNotifications.setChecked(false);
-
                 }
             }
         });
@@ -256,7 +263,6 @@ public class MainActivity extends AppCompatActivity {
         StringBuffer buffer = new StringBuffer();
         while(res.moveToNext()) {
             buffer.append(res.getString(1) + "\n");
-
         }
 
         // show all data
@@ -264,7 +270,6 @@ public class MainActivity extends AppCompatActivity {
         for(int i = 0; i<folders.length; i++){
             foldersList.add(new LearnFolder(folders[i]));
         }
-
     }
 
     public void showMessage(String title, String message){

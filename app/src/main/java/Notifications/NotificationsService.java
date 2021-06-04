@@ -18,6 +18,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.JobIntentService;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -118,6 +119,7 @@ public class NotificationsService extends JobIntentService {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
 
@@ -144,8 +146,6 @@ public class NotificationsService extends JobIntentService {
 
     @SuppressWarnings("deprecation")
     final Handler mHandler = new Handler();
-
-
 
     //Foreground service
     public void startService() {
@@ -280,6 +280,7 @@ public class NotificationsService extends JobIntentService {
         }
     }
 
+   @RequiresApi(api = Build.VERSION_CODES.O)
    public void messageNotificationStyle() {
         obWord = wordFinder.getWord(myDB);
 
