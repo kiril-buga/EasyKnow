@@ -30,7 +30,7 @@ public class NotificationTrigger extends BroadcastReceiver {
 
         Week week = notificationSettings.getWeek();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ) {
             LocalDate now = LocalDate.now();
 
             if (week.isMonday() == true && now.getDayOfWeek().equals(DayOfWeek.MONDAY)) {
