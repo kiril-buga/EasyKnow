@@ -54,7 +54,7 @@ public class AddFolderActivity extends AppCompatActivity {
             boolean isInserted = myDB.insertNewFolder(sFolder);
 
             if (isInserted) {
-                Toast.makeText(AddFolderActivity.this, "New folder inserted", Toast.LENGTH_LONG).show();
+                Toast.makeText(AddFolderActivity.this, "New folder inserted", Toast.LENGTH_SHORT).show();
                 goToMainActivity();
             } else{
                 editTextFolder.setError("Folder already exists");

@@ -70,13 +70,11 @@ public class AddWordActivity extends AppCompatActivity {
                 sFolder_id = res.getString(0);
                 if(res.getCount()==0) return;
 
-                //Show data
-                Toast.makeText(AddWordActivity.this, "FolderID: " + sFolder_id, Toast.LENGTH_LONG).show();
 
                 boolean isInserted = myDB.insertNewWord(sWord, sMeaning, sFolder_id);
 
                 if (isInserted) {
-                    Toast.makeText(AddWordActivity.this, "New word inserted", Toast.LENGTH_LONG).show();
+                    Toast.makeText(AddWordActivity.this, "New word inserted", Toast.LENGTH_SHORT).show();
                     goToWordActivity();
                 }
             }

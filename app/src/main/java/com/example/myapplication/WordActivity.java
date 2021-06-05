@@ -67,10 +67,8 @@ public class WordActivity extends AppCompatActivity {
             Intent intent = new Intent(WordActivity.this, AddWordActivity.class);
             if (!folderTitle.isEmpty()) {
                 intent.putExtra("folderTitle", folderTitle);
-                Toast.makeText(WordActivity.this, "FolderTitle:"+folderTitle, Toast.LENGTH_LONG).show();
             }
             startActivity(intent);
-            Toast.makeText(this, "Create new word", Toast.LENGTH_LONG).show();
         });
     }
 

@@ -184,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
                             myEditor.putBoolean(SWITCH_STATUS,true); //set switch button to true
                             myEditor.apply(); // apply
                             swShowNotifications.setChecked(true);
+                            Toast.makeText(getApplicationContext(), "Notifications activated",Toast.LENGTH_SHORT ).show();
                         } else {
                             Toast.makeText(getApplicationContext(), "Please make sure you add enough words",Toast.LENGTH_SHORT ).show();
                             
@@ -193,6 +194,9 @@ public class MainActivity extends AppCompatActivity {
                         }
                     } catch (Exception e) {
                         Toast.makeText(getApplicationContext(), "Please make sure you add enough words",Toast.LENGTH_SHORT ).show();
+                        myEditor.putBoolean(SWITCH_STATUS,false); //set switch button to false
+                        myEditor.apply(); // apply
+                        swShowNotifications.setChecked(false);
                     }
                 } else {
                     stopService(v);
@@ -206,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
                     myEditor.putBoolean(SWITCH_STATUS,false); //set switch button to false
                     myEditor.apply(); // apply
                     swShowNotifications.setChecked(false);
+                    Toast.makeText(getApplicationContext(), "Notifications deactivated",Toast.LENGTH_SHORT ).show();
                 }
             }
         });

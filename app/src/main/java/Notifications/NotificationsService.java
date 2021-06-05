@@ -83,7 +83,7 @@ public class NotificationsService extends JobIntentService {
         //currentNumberOfNotifications = 0;
         //enqueueWork(getApplicationContext(), intent);
 
-        Toast.makeText(getApplicationContext(), "Started", Toast.LENGTH_LONG);
+        //Toast.makeText(getApplicationContext(), "Started", Toast.LENGTH_LONG);
 //        showToast("Job Execution Started");
 //
 //        myDB = new DatabaseHelper(this);
@@ -106,7 +106,7 @@ public class NotificationsService extends JobIntentService {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(NotificationsService.this, text, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(NotificationsService.this, text, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -133,7 +133,7 @@ public class NotificationsService extends JobIntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        showToast("Job Execution Finished");
+        //showToast("Job Execution Finished");
     }
 
     @SuppressWarnings("deprecation")
