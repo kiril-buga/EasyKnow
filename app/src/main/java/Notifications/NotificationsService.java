@@ -1,20 +1,16 @@
 package Notifications;
 
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.text.Html;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,19 +21,15 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.RemoteInput;
 import androidx.core.content.ContextCompat;
 
-import com.example.myapplication.AddWordActivity;
 import com.example.myapplication.DatabaseHelper;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import EasyKnowLib.Day;
-import EasyKnowLib.NotificationSettings;
-import EasyKnowLib.Week;
 import EasyKnowLib.Word;
 import EasyKnowLib.WordFinder;
 
@@ -166,7 +158,7 @@ public class NotificationsService extends JobIntentService {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             obWord.incrementlearnStatus();
 
-            obWord.setLastNotificationTime(LocalDateTime.now());
+            obWord.setLastNotificationTime(LocalDate.now());
             myDB.updateWord(obWord.getId(), obWord.getLastNotificationTime().toString(), obWord.getLearnStatus());
         }
     }
@@ -174,7 +166,7 @@ public class NotificationsService extends JobIntentService {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             obWord.decrementLearnStatus();
 
-            obWord.setLastNotificationTime(LocalDateTime.now());
+            obWord.setLastNotificationTime(LocalDate.now());
 
             myDB.updateWord(obWord.getId(), obWord.getLastNotificationTime().toString(), obWord.getLearnStatus());
         }

@@ -7,8 +7,7 @@ import androidx.annotation.RequiresApi;
 
 import com.example.myapplication.DatabaseHelper;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class WordFinder {
@@ -19,7 +18,6 @@ public class WordFinder {
         words = new ArrayList<>();
     }
 
-    //@RequiresApi(api = Build.VERSION_CODES.O)
     @RequiresApi(api = Build.VERSION_CODES.O)
     public Word getWord(DatabaseHelper myDB) {
         Word word = null;
@@ -62,7 +60,7 @@ public class WordFinder {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void loadWordsFromDB(Cursor res) {
         words.clear();
-        LocalDateTime lastNotificationTime;
+        LocalDate lastNotificationTime;
         while(res.moveToNext()) {
             int wordId = Integer.parseInt(res.getString(0));
             String title = res.getString(1);
@@ -70,7 +68,7 @@ public class WordFinder {
             String lastTestSuccessfulString = res.getString(3);
             // Tries to parse String into LocalDateTime
             try {
-                lastNotificationTime = LocalDateTime.parse(res.getString(4));
+                lastNotificationTime = LocalDate.parse(res.getString(4));
             } catch (Exception e) {
                 lastNotificationTime = null;
             }

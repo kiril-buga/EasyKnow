@@ -1,6 +1,6 @@
 package EasyKnowLib;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Word {
     // WordData
@@ -8,7 +8,7 @@ public class Word {
     private String title;
     private String meaning;
     // TestData
-    private LocalDateTime lastNotificationTime;
+    private LocalDate lastNotificationTime;
     private boolean LastTestSuccessful;
     private int learnStatus = 0;
     private int folderId;
@@ -18,7 +18,7 @@ public class Word {
         this.meaning = meaning;
     }
 
-    public Word(int id, String title, String meaning, LocalDateTime lastNotificationTime, boolean lastTestSuccessful, int learnStatus, int folderId) {
+    public Word(int id, String title, String meaning, LocalDate lastNotificationTime, boolean lastTestSuccessful, int learnStatus, int folderId) {
         this.id = id;
         this.title = title;
         this.meaning = meaning;
@@ -70,11 +70,11 @@ public class Word {
         this.meaning = meaning;
     }
 
-    public LocalDateTime getLastNotificationTime() {
+    public LocalDate getLastNotificationTime() {
         return lastNotificationTime;
     }
 
-    public void setLastNotificationTime(LocalDateTime lastNotificationTime) {
+    public void setLastNotificationTime(LocalDate lastNotificationTime) {
         this.lastNotificationTime = lastNotificationTime;
     }
 
