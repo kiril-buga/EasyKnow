@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
         Cursor res = myDB.getAllFolders();
         if(res.getCount()==0){
             // show message
-            showMessage("Welcome!", "Please, add new topics and words");
+            showMessage("Welcome!", "Please, add new topics and words. Don't forget to set your notification settings in the notification manager :)");
             return;
         }
         StringBuffer buffer = new StringBuffer();
