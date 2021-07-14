@@ -1,6 +1,18 @@
 <resources>
     <string name="app_name">EasyKnow</string>
-    <string name="show">Show</string>
+
+    <!-- Add a new topic -->
+    <string name="add_a_new_topic">Add a new topic</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="topic_name">Topic name</string>
+    <string name="meaning">Meaning</string>
+    <!-- Add a new word -->
+    <string name="add_a_new_word">Add a new word</string>
+    <string name="word">Word</string>
+    <string name="addBtn">addBtn</string>
+    <string name="show_notifications">DISPLAY NOTIFICATIONS</string>
+
     <string-array name="numberOfNotifications">
         <item>0</item>
         <item>1</item>

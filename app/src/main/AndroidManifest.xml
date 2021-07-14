@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.myapplication">
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"></uses-permission>
-    <uses-permission android:name="android.permission.WAKE_LOCK"></uses-permission>
-    <uses-permission android:name="android.permission.SET_ALARM"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.SET_ALARM"/>
     <application
         android:name=".EasyKnow"
         android:allowBackup="true"
@@ -12,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name="Notifications.NotificationManagerActivity"></activity>
+        <activity android:name="Notifications.NotificationManagerActivity"/>
         <activity android:name=".AddWordActivity" />
         <activity android:name=".WordActivity" />
         <activity android:name=".AddFolderActivity" /> <!-- added for actionBar -->
@@ -29,6 +30,14 @@
         <service android:name="Notifications.Services"/>
         <service android:name="Notifications.NotificationsService"
         android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <!--Added for Firebase-->
+        <service android:name="Notifications.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
     </application>
 

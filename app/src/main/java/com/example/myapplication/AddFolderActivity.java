@@ -8,19 +8,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class AddFolderActivity extends AppCompatActivity {
 
     private DatabaseHelper myDB;
-    private static final String FILE_NAME = "data.txt";
     private EditText editTextFolder;
-    private Button btnSaveFolder;
-    private Button btnSaveFolderCancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +20,8 @@ public class AddFolderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_folder);
 
         editTextFolder = findViewById(R.id.WordName);
-        btnSaveFolder = findViewById(R.id.btSaveWord);
-        btnSaveFolderCancel = findViewById(R.id.btCancel);
+        Button btnSaveFolder = findViewById(R.id.btSaveWord);
+        Button btnSaveFolderCancel = findViewById(R.id.btCancel);
 
         myDB = new DatabaseHelper(this);
 
@@ -38,63 +30,30 @@ public class AddFolderActivity extends AppCompatActivity {
             saveFolder();
         });
 
-        btnSaveFolderCancel.setOnClickListener((view)->{
-            goToMainActivity();
-        });
+        btnSaveFolderCancel.setOnClickListener((view)-> goToMainActivity());
     }
 
     public void saveFolder(){
         final String sFolder = editTextFolder.getText().toString().trim();
 
         if(sFolder.isEmpty()){
-            editTextFolder.setError("Folder required");
+            editTextFolder.setError("Topic required");
             editTextFolder.requestFocus();
         }
         else {
             boolean isInserted = myDB.insertNewFolder(sFolder);
 
             if (isInserted) {
-                Toast.makeText(AddFolderActivity.this, "New folder inserted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddFolderActivity.this, "New topic inserted", Toast.LENGTH_SHORT).show();
                 goToMainActivity();
             } else{
-                editTextFolder.setError("Folder already exists");
+                editTextFolder.setError("This topic already exists");
                 editTextFolder.requestFocus();
             }
 
         }
 
     }
-
-//    public void loadFolder(){
-//        FileInputStream fis = null;
-//
-//        try {
-//            fis = openFileInput(FILE_NAME);
-//            InputStreamReader isr = new InputStreamReader(fis);
-//            BufferedReader br = new BufferedReader(isr);
-//            StringBuilder sb = new StringBuilder();
-//            String text;
-//
-//            while((text = br.readLine()) != null){
-//                sb.append(text).append("\n");
-//            }
-//            // load to
-//
-//            editTextFolder.setText(sb.toString());
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } finally {
-//            if(fis != null) {
-//                try {
-//                    fis.close();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-//    }
 
     private void goToMainActivity(){
         Intent intent = new Intent(AddFolderActivity.this, MainActivity.class );

@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">EasyKnow</string>
+    <!-- Add a new topic -->
+    <string name="add_a_new_topic">Ajouter un nouveau thème</string>
+    <string name="cancel">Annuler</string>
+    <string name="save">Enregistrer</string>
+    <string name="topic_name">Thème</string>
+    <string name="meaning">Signification</string>
+    <string name="add_a_new_word">Ajouter un nouveau mot</string>
+    <string name="word">Mot</string>
+    <string name="addBtn">Ajouter</string>
+    <string name="show_notifications">AFFICHER LES NOTIFICATIONS</string>
+</resources>
